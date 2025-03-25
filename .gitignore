@@ -3,3 +3,6 @@
 package-lock.json
 .dockerignore
 node_modules/
+data/
+data
+*pycache*
