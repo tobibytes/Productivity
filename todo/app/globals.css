@@ -41,13 +41,22 @@ html, body {
   flex-direction: column;
   /* justify-content: space-between; */
   gap: clamp(5px, 9px, 15px);
+  align-items: center;
 }
 .chat-container header {
   display: flex;
   gap: clamp(5px, 10px, 20px);
   align-items: center;
+  align-self: stretch;
   align-content: center;
   padding: 5px;
+  transition: background 0.5s ease-in-out;
+}
+.chat-container header:hover {
+  background-color: #171717;
+}
+hr {
+  width: 100%;
 }
 .icon {
   border-radius: 50%;
@@ -56,10 +65,11 @@ html, body {
 }
 .input-container {
   margin-top: auto;
-  width: 100%;
+  width: 90%;
   border-radius: 20px;
   border: 2px solid blue;
   padding: 10px;
+  margin-bottom: 30px;
 }
 .input-container textarea {
   padding: 5px;
@@ -92,12 +102,16 @@ input[type="file"] {
   height: clamp(100px, 150px, 250px);
   border-radius: 10px;
   border: 1px solid indigo;
+  background-color: brown;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   position: absolute;
-  top: 90;
-  left: 10;
+  top: 60%;
+  left: 5%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
 }
 .file-modal label {
   padding: 0;
@@ -105,13 +119,68 @@ input[type="file"] {
   justify-content: space-between;
   align-items: center;
   padding: 5px;
+  transition: background 0.7s ease;
 }
-.file-modal:hover {
-  background-color: bisque;
+.file-modal label:hover {
+  background-color: aqua;
 }
+#file-modal-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: clamp(20px, 32px, 40px);
+  height: clamp(20px, 32px, 40px);
+}
+
+#file-modal-checkbox:checked ~ .file-modal {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .header-img {
   border-radius: 50%;
   border: 1px dashed orange;
   width: 50px;
   height: 50px;
+}
+
+.messages-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: scroll;
+  gap: 10px;
+}
+
+.message {
+  margin-right: auto;
+  border: 1px solid blue;
+  border-radius: 20px;
+  padding: clamp(5px, 7px, 10px);
+  color: green;
+  width: clamp(80px, 60%, 80%);
+  height: clamp(100px, 400px, 100);
+  display: flex;
+}
+
+.message:nth-child(odd) {
+  background-color: green;
+  color: yellow;
+  margin: 0;
+  margin-left: auto;
+}
+
+.message:target {
+  background-color: gold;
+}
+
+/* Add a pseudo-element inside the target element */
+.message:target::before {
+  font: 70% sans-serif;
+  content: "►";
+  color: limegreen;
+}
+
+/* Style italic elements within the target element */
+.message:target i {
+  color: red;
 }
