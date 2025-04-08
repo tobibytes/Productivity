@@ -1,10 +1,11 @@
 from typing import List
-
-def process_announcements_for_kafka(announcments : List[dict]):
+import json
+import html2text
+def process_announcements_for_broker(announcments : List[dict]):
     try:
         announcments_to_save = []
         for announcement in announcments:
-            result = process_announcment_for_kafka(announcement)
+            result = process_announcment_for_broker(announcement)
             announcments_to_save.append(result)
         return announcments_to_save
     except Exception as e:
@@ -12,16 +13,16 @@ def process_announcements_for_kafka(announcments : List[dict]):
         return None
 
 
-def process_announcment_for_kafka(announcement : dict):
+def process_announcment_for_broker(announcement : dict):
     try:
-        return {
+        return json.dumps({
             "title": announcement.get('title', None),
             "created_at": announcement.get('created_at', None),
             "url": announcement.get('url', None),
             "context_code": announcement.get('context_code', None),
-            "message": announcement.get('message', None),
+            "message": html2text.html2text(announcement.get('message', '').strip('\\n')),
             "todo_date": announcement.get('todo_date')
-        }
+        })
     
     except Exception as e:
         print(e)

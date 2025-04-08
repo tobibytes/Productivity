@@ -43,6 +43,13 @@ html, body {
   gap: clamp(5px, 9px, 15px);
   align-items: center;
 }
+.chat-container [draggable=true] {
+  cursor: move;
+}
+.resizable {
+  overflow: scroll;
+  resize: both;
+}
 .chat-container header {
   display: flex;
   gap: clamp(5px, 10px, 20px);
@@ -51,6 +58,7 @@ html, body {
   align-content: center;
   padding: 5px;
   transition: background 0.5s ease-in-out;
+  cursor: pointer;
 }
 .chat-container header:hover {
   background-color: #171717;
@@ -70,6 +78,7 @@ hr {
   border: 2px solid blue;
   padding: 10px;
   margin-bottom: 30px;
+  background: transparent;
 }
 .input-container textarea {
   padding: 5px;
@@ -150,6 +159,8 @@ input[type="file"] {
   width: 100%;
   overflow-y: scroll;
   gap: 10px;
+  margin-top: auto;
+  align-self: stretch;
 }
 
 .text {
@@ -207,4 +218,28 @@ input[type="file"] {
 
 .link-url {
   font-weight: 100;
+}
+
+.file-preview-container {
+  display: flex;
+  gap: clamp(5px, 15px, 25px);
+  width: 100%;
+  height: clamp(20px, 80px, 100px);
+  margin-top: auto;
+}
+.file-preview {
+  display: flex;
+}
+.file-preview img {
+  width: 80px;
+  height: 80px;
+  border-radius: 10;
+  object-fit: cover;
+}
+.cancel-button {
+  position: absolute;
+  margin-left: clamp(60px, 50px, 10px);
+  width: clamp(10px, 20px, 60px);
+  height: clamp(5px, 15px, 25px);
+  cursor: pointer;
 }

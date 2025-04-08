@@ -7,5 +7,5 @@ def get_start_date(cache):
     return date
 
 def get_new_date():
-    date = datetime.date()
-    return date
+    now = datetime.now()
+    return now.date().strftime("%d-%m-%Y-%H:%M:%S")
