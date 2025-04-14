@@ -9,7 +9,12 @@ client = MongoClient(uri)
 # Send a ping to confirm a successful connection
 summary_db = client.summary
 
-summary_col = summary_db.summary
+try:
+    summary_col = summary_db.create_collection('summary')
+except:
+    summary_col = summary_db.summary
 
 def add_summary_to_db(summary):
+    print('summary')
+    summary['status'] = 0
     summary_col.insert_one(summary)

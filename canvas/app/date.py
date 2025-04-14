@@ -1,11 +1,12 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 def get_start_date(cache):
-    date = cache.get("canvas_last_announcement")
+    date = cache.get("canvas_last_time")
     if not date:
-        date = None
+        date = get_new_date()
     return date
 
+
 def get_new_date():
-    now = datetime.now()
-    return now.date().strftime("%d-%m-%Y-%H:%M:%S")
+    now = datetime.now(timezone.utc)
+    return now.strftime("%Y-%m-%dT%H:%M:%SZ")

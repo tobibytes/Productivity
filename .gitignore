@@ -8,3 +8,4 @@ data
 *pycache*
 venv/
 venv
+docker-compose.yml

@@ -1,10 +1,10 @@
 from typing import List
 import json
 import html2text
-def process_announcements_for_broker(announcments : List[dict]):
+def process_announcements_for_broker(announcements : List[dict]):
     try:
         announcments_to_save = []
-        for announcement in announcments:
+        for announcement in announcements:
             result = process_announcment_for_broker(announcement)
             announcments_to_save.append(result)
         return announcments_to_save

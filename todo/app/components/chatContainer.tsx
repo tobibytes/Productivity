@@ -73,7 +73,6 @@ export function ChatContainer() {
     const [messages, setMessages] = useState<MessageType[] | InputType[]>(messageData);
     const [input, setInput] = useState<InputType>({ type: 'text', content: '', id: 1, timestamp: Date.now().toString() });
     const [filePreview, setFilePreview] = useState<FileInput[]>([]);
-    const [textInput, setTextInput] = useState("")
     const router = useRouter();
 
     useEffect(() => {

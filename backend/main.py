@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from db import get_summary_from_db
+from db import get_summary_from_db, get_summary_from_db_test, update_summary_status_db
 
 
 
@@ -22,3 +22,12 @@ def index():
 def get_summary():
     summaries = get_summary_from_db()
     return summaries
+
+@app.get('/summarytest/')
+def get_summary():
+    summaries = get_summary_from_db_test()
+    print(summaries)
+
+@app.put('/summary/{id}/status')
+def update_summary_status(id: str, status: int):
+    update_summary_status_db(id, status)
