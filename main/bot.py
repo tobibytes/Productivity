@@ -3,83 +3,69 @@ import json
 
 client = OpenAI(api_key="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")
 def analyze(message):
-
     response = client.responses.create(
-    model="gpt-4o",
-    input=[
-        {
-        "role": "system",
-        "content": [
+        model="gpt-4o",
+        input=[
             {
-            "type": "input_text",
-            "text": "analyze this message and return a summary of it, don't make it to long, advise on how to complete the task., also the priority as either low, medium or high as 1,2,3 respectively. the advice and summary should be written in markdown, highlight important things to note so when i render it or copy it to a markdown editor, it will look good .  also put a date it should be completed by."
-            }
-        ]
-        },
-        {
-        "role": "user",
-        "content": f"{message}"
-        },
-    ],
-    text={
-        "format": {
-        "type": "json_schema",
-        "name": "task_schema",
-        "schema": {
-            "type": "object",
-            "required": [
-            "priority",
-            "due_date",
-            "summary",
-            "title",
-            "from",
-            "advice",
-            "resources"
-            ],
-            "properties": {
-            "from": {
-                "type": "string",
-                "description": "The sender of the message, e.g., Canvas or another service."
+                "role": "system",
+                "content": [
+                    {
+                        "type": "input_text",
+                        "text": (
+                            "You are an expert assistant who explains tasks clearly and patiently, like a great teacher. "
+                            "When analyzing the user's message, break it down thoughtfully and explain it in Markdown format. "
+                            "Use **analogies**, **step-by-step guidance**, and highlight important concepts using `bold`, `italic`, or bullet points. "
+                            "Your response should include:\n\n"
+                            "1. A **summary** of what the task is about.\n"
+                            "2. An **in-depth explanation** of what it requires, with helpful analogies where possible.\n"
+                            "3. **Advice on how to complete the task** efficiently.\n"
+                            "4. A suggested **priority** level as an integer:\n"
+                            "   - 1 = Low\n"
+                            "   - 2 = Medium\n"
+                            "   - 3 = High\n"
+                            "5. A **recommended date** to complete the task.\n\n"
+                            "Use clear, readable Markdown that renders well in any Markdown viewer."
+                        )
+                    }
+                ]
             },
-            "title": {
-                "type": "string",
-                "description": "A suitable title for the task."
+            {
+                "role": "user",
+                "content": f"{message}"
             },
-            "advice": {
-                "type": "string",
-                "description": "Advice on how to complete the task or any relevant guidance. written in markdown"
-            },
-            "summary": {
-                "type": "string",
-                "description": "A summary of the message being sent, written in Markdown."
-            },
-            "due_date": {
-                "type": "string",
-                "description": "The date by which the task should be completed."
-            },
-            "priority": {
-                "type": "number",
-                "description": "Priority level of the task: 1 for low, 2 for medium, and 3 for high."
-            },
-            "resources": {
-                "type": "array",
-                "items": {
-                "type": "string"
+        ],
+        text={
+            "format": {
+                "type": "json_schema",
+                "name": "task_schema",
+                "schema": {
+                    "type": "object",
+                    "required": ["priority", "analysis", "title"],
+                    "properties": {
+                        "title": {
+                            "type": "string",
+                            "description": "A suitable title for the task."
+                        },
+                        "analysis": {
+                            "type": "string",
+                            "description": "A detailed, well-written analysis of the message in Markdown."
+                        },
+                        "priority": {
+                            "type": "number",
+                            "description": "Priority level of the task: 1 for low, 2 for medium, and 3 for high."
+                        }
+                    },
+                    "additionalProperties": False
                 },
-                "description": "A list of resources, such as links, related to the task."
+                "strict": True
             }
-            },
-            "additionalProperties": False
         },
-        "strict": True
-        }
-    },
-    reasoning={},
-    tools=[],
-    temperature=1,
-    max_output_tokens=2048,
-    top_p=1,
-    store=True
+        reasoning={},
+        tools=[],
+        temperature=1,
+        max_output_tokens=2048,
+        top_p=1,
+        store=True
     )
 
     return json.loads(response.output[0].content[0].text)
