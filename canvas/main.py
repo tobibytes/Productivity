@@ -17,11 +17,14 @@
 #     redis.set('canvas_last_time', new_date)
 #     time.sleep(3600)
 
-from canvas import CanvasFirst, Modules, Submissions, Assignments
-from canvas.db import Database
-
+from canvas import CanvasFirst, Modules, Submissions, Assignments, Database, KeyEncryptor, convert_to_markdown, analyze
+from pydantic import BaseModel
+from typing import Optional
 db = Database()
 
+class RequestHandler(BaseModel):
+    email: Optional[str] = None
+    api_key: Optional[str] = None
 
 import threading
 from fastapi import FastAPI
@@ -41,17 +44,22 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
-@app.post("/login")
-def login(email: str, api_key: str):
+@app.post("/signin")
+def login(value: RequestHandler):
+    email = value.email
+    api_key = value.api_key
     user = db.get_user(email=email)
     if not user:
         return {"error": "Could not login user"}
-    if user['api_key'] != api_key:
+    print(user)
+    if KeyEncryptor.decrypt(user['api_key']) != api_key:
         return {"error": "Could not login user"}
-    return {"email": email, "api_key": api_key, success: True}
+    return {"email": email, "api_key": user['api_key'], "success": True}
 
 @app.post("/register")
-def register(email: str, api_key: str):
+def register(value: RequestHandler):
+    email = value.email
+    api_key = value.api_key
     user = db.get_user(email=email)
     if user:
         return {"error": "Could not register user"}
@@ -59,7 +67,7 @@ def register(email: str, api_key: str):
         user_canvas = CanvasFirst(api_key=api_key, email=email)
         user_info = user_canvas.get_user_and_courses()
         db.add_user(user_info)
-        api_key = user_info['api_key']
+        api_key = KeyEncryptor.decrypt(user_info['api_key'])
         email = user_info['email']
         def populate():
             for course in user_info['courses']:
@@ -69,7 +77,7 @@ def register(email: str, api_key: str):
 
                 all_modules = modules.get_modules()
                 for j in range(len((all_modules))):
-                    module_items = all_modules[i]['module_items']
+                    module_items = all_modules[j]['module_items']
                     for i in range(len(module_items)):
                         item_markdown = convert_to_markdown(module_items[i]['module_item_download_url'])
                         analysis = analyze(item_markdown)
@@ -87,52 +95,58 @@ def register(email: str, api_key: str):
                     db.add_assignment(assignment)
         thread = threading.Thread(target=populate)
         thread.start()
-        return {"status": "User registered successfully"}
+        return {"status": "User registered successfully", "success": True}
     return {"error": "Could not register user"}
 
 
 @app.get("/courses")
 def get_courses(email: str):
     user_info = db.get_user(email=email)
-    if not user:
+    if not user_info:
         return {"error": "Could not login user"}
     user_courses = user_info['courses']
+    for course in user_courses:
+        course['course_id'] = str(course['course_id'])
     return {"courses": user_courses}
 
 @app.get("/courses/{course_id}")
-def get_course(course_id: int, email: str):
+def get_course(course_id: str, email: str):
     user_info = db.get_user(email=email)
-    if not user:
+    if not user_info:
         return {"error": "Could not login user"}
-    course = user_info['courses'].get(course_id, None)
-    return {"course": course}
+    courses = user_info['courses']
+    for course in courses:
+        course['course_id'] = str(course['course_id'])
+        if course['course_id'] == course_id:
+            return {"course": course}
+    return {"error": "Course not found"}
 
 @app.get("/courses/{course_id}/modules")
-def get_modules(course_id: int, email: str):
+def get_modules(course_id: str, email: str):
     modules = db.get_modules(course_id=course_id)
     return {"modules": modules}
 
 @app.get("/courses/{course_id}/modules/{module_id}")
-def get_module(course_id: int, module_id: int):
+def get_module(course_id: str, module_id: str):
     module = db.get_module(course_id=course_id, module_id=module_id)
     return {"module": module}
 
 @app.get("/modules/{module_id}/moduleitems")
-def get_module_items(module_id: int):
+def get_module_items(module_id: str):
     module_items = db.get_module_items(module_item_module_id=module_id)
     return {"module_items": module_items}
 
-@app.get("/module/{module_id}/moduleitems/{module_item_id}")
-def get_module_item(module_id: int, module_item_id: int):
+@app.get("/modules/{module_id}/moduleitems/{module_item_id}")
+def get_module_item(module_id: str, module_item_id: str):
     module_item = db.get_module_item(module_item_module_id=module_id, module_item_id=module_item_id)
     return {"module_item": module_item}
 
-@app.get("/course/{course_id}/assignments")
-def get_assignments(course_id: int):
+@app.get("/courses/{course_id}/assignments")
+def get_assignments(course_id: str):
     assignments = db.get_assignments(course_id=course_id)
     return {"assignments": assignments}
     
-@app.get("/course/{course_id}/assignments/{assignment_id}")
-def get_assignment(assignment_id: int, course_id: int):
-    assignment = db.get_assignment(assignment_id=assignment_id)
+@app.get("/courses/{course_id}/assignments/{assignment_id}")
+def get_assignment(assignment_id: str, course_id: str):
+    assignment = db.get_assignment(assignment_id=assignment_id, course_id=course_id)
     return {"assignment": assignment}

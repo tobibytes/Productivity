@@ -39,7 +39,7 @@ class CanvasFirst:
     
     def _format_course(self, course):
         return {
-            "course_id": course['id'],
+            "course_id": str(course['id']),
             "course_account_id": self.account_id,
             "course_name": course['name'],
             "course_code": course['course_code'],
@@ -59,7 +59,7 @@ class CanvasFirst:
         """
         courses = self._get_cur_semester_courses()
         user_info = self._get_user()
-        user.update({
+        user_info.update({
             "courses": courses
         })
         return user_info

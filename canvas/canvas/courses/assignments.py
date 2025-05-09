@@ -25,8 +25,8 @@ class Assignments:
         Parses a single assignment and returns relevant details.
         """
         return {
-            "assignment_course_id": self.course_id,
-            "assignment_id": assignment.get("id"),
+            "assignment_course_id": str(self.course_id),
+            "assignment_id": str(assignment.get("id")),
             "assignment_description": assignment.get("description"),
             "assignment_due_at": assignment.get("due_at"),
             "assignment_unlock_at": assignment.get("unlock_at"),

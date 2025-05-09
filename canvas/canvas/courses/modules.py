@@ -53,9 +53,11 @@ class Modules:
         """
         Parse the module item.
         """
+        if 'id' not in module_item:
+            raise ValueError("Module item does not have an ID.")
         return {
-            "module_item_module_id": module_parent_id,
-            "module_item_id": module_item['id'],
+            "module_item_module_id": str(module_parent_id),
+            "module_item_id": str(module_item['id']),
             "module_item_title": module_item['display_name'],
             "module_item_filename": module_item['filename'],
             "module_item_uuid": module_item['uuid'],
@@ -71,8 +73,8 @@ class Modules:
         Parse the module.
         """
         return {
-            "module_course_id": self.course_id,
-            "module_id": module['id'],
+            "module_course_id": str(self.course_id),
+            "module_id": str(module['id']),
             "module_name": module['name'],
             "module_completed_at": module['completed_at'],
             "module_state": module['state'],
@@ -90,6 +92,11 @@ class Modules:
             module_items_general = self._get_module_items_general(module['id'])
             parsed_module['module_items'] = []
             for module_item_general in module_items_general:
-                parsed_module['module_items'].append(self._parse_module_item(self._get_module_items(module_item_general), module['id']))
+                print(module_item_general)
+                try:
+                    parsed_module['module_items'].append(self._parse_module_item(self._get_module_items(module_item_general), module['id']))
+                except Exception as e:
+                    print(f"Error parsing module item: {e}")
+                    continue
             parsed_modules.append(parsed_module)
         return parsed_modules

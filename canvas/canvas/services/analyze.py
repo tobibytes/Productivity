@@ -40,7 +40,7 @@ def analyze(message):
                 "name": "module_schema",
                 "schema": {
                     "type": "object",
-                    "required": ["title", "analysis"],
+                    "required": ["title", "analysis", "priority"],
                     "properties": {
                         "title": {
                             "type": "string",

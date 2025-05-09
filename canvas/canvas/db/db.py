@@ -2,7 +2,7 @@
 from pymongo.mongo_client import MongoClient
 import os
 import bson
-uri = os.getenv("mongo_uri")
+uri = "mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 class Database:
     def __init__(self):
         """
@@ -10,7 +10,7 @@ class Database:
         """
         self.uri = uri
         self.client = MongoClient(uri)
-        self.db = client.db
+        self.db = self.client.db
         try:
             self.user_col = self.db.create_collection('user')
             self.modules_col = self.db.create_collection('modules')
@@ -26,10 +26,10 @@ class Database:
             self.submissions_col = self.db.submissions
         try:
             self.user_col.create_index('email', unique=True)
-            self.modules_col.create_index('module_id', unique=True)
-            self.module_items_col.create_index('module_item_id', unique=True)
-            self.assignments_col.create_index('assignment_id', unique=True)
-            self.submissions_col.create_index('submission_id', unique=True)
+            # self.modules_col.create_index('module_id', unique=True)
+            # self.module_items_col.create_index('module_item_id', unique=True)
+            # self.assignments_col.create_index('assignment_id', unique=True)
+            # self.submissions_col.create_index('submission_id', unique=True)
             self.user_col.create_index('status')
             self.modules_col.create_index('course_id')
         except:
@@ -95,11 +95,11 @@ class Database:
         else:
             return None
         
-    def get_module_item(self module_item_module_id, module_item_id):
+    def get_module_item(self, module_item_module_id, module_item_id):
         """
         Get a module item from the database.
         """
-        module_item = self.module_items_col.find_one({'module_item_id': module_item_id, 'module_item_module_id': module_id})
+        module_item = self.module_items_col.find_one({'module_item_id': module_item_id, 'module_item_module_id': module_item_module_id})
         if module_item:
             return self.format_for_db(module_item)
         else:
@@ -109,7 +109,7 @@ class Database:
         """
         Add an assignment to the database.
         """
-        self.modules_col.insert_one(assignment)
+        self.assignments_col.insert_one(assignment)
         
     def get_assignment(self, course_id, assignment_id):
         """

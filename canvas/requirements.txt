@@ -1,3 +1,10 @@
-redis
+fastapi
+uvicorn
+pydantic
+python-multipart
+uvicorn[standard]
 requests
 html2text
+openai
+markitdown[all]
+pymongo
