@@ -30,6 +30,7 @@ const ModulesPage = () => {
   useEffect(() => {
     async function fetchModules() {
       try {
+        console.log(process.env.BACKEND_URL)
         const res = await fetch(`${process.env.BACKEND_URL}/courses/${course_id}/modules?email=${email}`);
         const data = await res.json();
         console.log("Modules:", data);

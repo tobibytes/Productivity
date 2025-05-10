@@ -25,7 +25,7 @@ const CoursePage = () => {
   useEffect(() => {
     async function fetchCourse() {
       try {
-        const res = await fetch(`http://localhost:8000/courses/${course_id}?email=${email}`);
+        const res = await fetch(`${process.env.BACKEND_URL}/courses/${course_id}?email=${email}`);
         const data = await res.json();
         console.log("Course data:", data);
         setCourse(data.course);
