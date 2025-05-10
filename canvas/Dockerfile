@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.13
 
 WORKDIR /app
 
@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 5001
 
-CMD ["python3", "main.py"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

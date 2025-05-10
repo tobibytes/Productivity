@@ -26,7 +26,7 @@ export default function AssignmentPage() {
     async function fetchAssignment() {
       try {
         const res = await fetch(
-          `http://localhost:8000/courses/${assignment?.assignment_course_id}/assignments/${assignment_id}`
+          `${process.env.BACKEND_URL}/courses/${course_id}/assignments/${assignment_id}`
         );
         const data = await res.json();
         setAssignment(data.assignment);

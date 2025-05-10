@@ -20,7 +20,7 @@ const CoursesPage = () => {
     async function fetchCourses() {
       try {
         const email = sessionStorage.getItem("email");
-        const res = await fetch(`http://localhost:8000/courses?email=${email}`);
+        const res = await fetch(`${process.env.BACKEND_URL}/courses?email=${email}`);
         const data = await res.json();
         setCourses(data.courses || []);
       } catch (error) {

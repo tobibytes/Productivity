@@ -6,5 +6,7 @@ uvicorn[standard]
 requests
 html2text
 openai
+markitdown
+python-dotenv
 markitdown[all]
 pymongo

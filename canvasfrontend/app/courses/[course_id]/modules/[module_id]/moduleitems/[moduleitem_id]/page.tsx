@@ -5,8 +5,8 @@ import React, { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
 interface ModuleItemPageProps {
-  module_item_module_id: number;
-  module_item_id: number;
+  module_item_module_id: string;
+  module_item_id: string;
   module_item_title: string;
   module_item_filename: string;
   module_item_uuid: string;
@@ -24,15 +24,15 @@ interface ModuleItemPageProps {
 }
 
 const moduleItemSample : ModuleItemPageProps= {
-  module_item_module_id: 278723,
-  module_item_id: 6126236,
-  module_item_title: "symmetric.key.crypto.pdf",
-  module_item_filename: "symmetric.key.crypto.pdf",
-  module_item_uuid: "VoK5ERyBFjx13My58m62TO8GOBvwfbbuY43xY6bY",
+  module_item_module_id: "278723",
+  module_item_id: "6126236",
+  module_item_title: "test",
+  module_item_filename: "test",
+  module_item_uuid: "test",
   module_item_type: "pdf",
-  module_item_content_type: "application/pdf",
+  module_item_content_type: "test",
   module_item_download_url:
-    "https://morganstate.instructure.com/files/6126236/download?download_fr=1",
+    "test",
   module_item_size: 128540,
   module_item_created_at: "2025-02-07T12:20:43Z",
   module_item_analysis: {
@@ -52,7 +52,7 @@ const ModuleItemPage = () => {
 
   useEffect(() => {
     async function fetchData() {
-        const res = await fetch(`http://localhost:8000/modules/${module_id}/moduleitems/${moduleitem_id}`)
+        const res = await fetch(`${process.env.BACKEND_URL}/modules/${module_id}/moduleitems/${moduleitem_id}`)
         const data = await res.json();
         setModuleItem(data.module_item)
     }

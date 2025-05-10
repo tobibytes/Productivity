@@ -25,7 +25,8 @@ export default function AssignmentsPage() {
   useEffect(() => {
     async function fetchAssignments() {
       try {
-        const res = await fetch(`http://localhost:8000/courses/${course_id}/assignments`);
+        console.log("Fetching assignments for course ID:", course_id);
+        const res = await fetch(`${process.env.BACKEND_URL}/courses/${course_id}/assignments`);
         const data = await res.json();
         setAssignments(data.assignments || []);
       } catch (error) {

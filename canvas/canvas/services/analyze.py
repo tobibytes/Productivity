@@ -1,7 +1,10 @@
 from openai import OpenAI
 import json
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def analyze(message):
     response = client.responses.create(
         model="gpt-4o",
@@ -24,7 +27,7 @@ def analyze(message):
                             "   - Give tips on how to approach it.\n"
                             "   - Suggest a realistic **priority** (1 = low, 2 = medium, 3 = high).\n"
                             "   - Propose a **completion date**, if appropriate.\n\n"
-                            "Be thorough, kind, and clear. You're here to make learning easier, not just faster."
+                            "Be thorough, kind, and clear. You're here to make learning easier, not just faster. Also add good amount of spacing between the sections and text so it could be readable.\n\n"
                         )
                     }
                 ]
@@ -48,7 +51,7 @@ def analyze(message):
                         },
                         "analysis": {
                             "type": "string",
-                            "description": "A thoughtful, detailed explanation in Markdown, with analogies, examples, and clear structure."
+                            "description": "A thoughtful, detailed explanation in Markdown because it would be rendered in markdown, with analogies, examples, and clear structure. add good amount of spacing between the sections and text so it could be readable. Make it long and interesting to read too"
                         },
                         "priority": {
                             "type": "number",

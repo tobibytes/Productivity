@@ -4,45 +4,44 @@ services:
     build: ./canvas
     container_name: canvas
     ports:
-      - "5001:5001"
+      - "8000:8000"
     environment:
       - CANVAS_ACCESS_TOKEN=13154~JerZ2enk78z7wwRue29ZGcy4BhXVDQx7CWcFaMNTetT7E9uADWfyWPWEQ36rQAzf
+      - OPENAI_API_KEY=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
+      - MONGO_URI=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     networks:
       - app-network
-    depends_on:
-      - main
-  main:
-    build: ./main
-    container_name: main
-    environment:
-      - mongo_uri=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-    ports:
-      - "5002:5002"
-    networks:
-      - app-network
-    depends_on:
-      - redis
+  # main:
+  #   build: ./main
+  #   container_name: main
+  #   environment:
+  #   ports:
+  #     - "5002:5002"
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     - redis
     
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./data/redis:/data/redis
-    networks:
-      - app-network
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - ./data/redis:/data/redis
+  #   networks:
+  #     - app-network
   
-  backend:
-    build: ./backend
-    container_name: backend
-    ports:
-      - "5000:5000"
-    networks:
-      - app-network
-    environment:
-      - mongo_uri=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+  # backend:
+  #   build: ./backend
+  #   container_name: backend
+  #   ports:
+  #     - "5000:5000"
+  #   networks:
+  #     - app-network
+  #   environment:
+  #     - mongo_uri=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
 networks:
   app-network:

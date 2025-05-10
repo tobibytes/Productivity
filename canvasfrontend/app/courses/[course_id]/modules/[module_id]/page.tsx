@@ -6,8 +6,8 @@ import ModuleItemCard from "@/components/ModuleItemCard";
 import ModuleCard from "@/components/ModuleCard";
 
 interface ModuleItemCardProps {
-  module_item_module_id: string;
-  module_item_id: string;
+  module_item_module_id: number;
+  module_item_id: number;
   module_item_title: string;
   module_item_filename: string;
   module_item_uuid: string;
@@ -16,6 +16,7 @@ interface ModuleItemCardProps {
   module_item_download_url: string;
   module_item_size: number;
   module_item_created_at: string;
+  module_course_id: string;
 }
 
 interface ModuleData {
@@ -35,9 +36,8 @@ export default function ModulePage() {
   useEffect(() => {
     async function fetchModule() {
       try {
-        const res = await fetch(`http://localhost:8000/courses/${course_id}/modules/${module_id}`);
+        const res = await fetch(`${process.env.BACKEND_URL}/courses/${course_id}/modules/${module_id}`);
         const data = await res.json();
-        console.log("Module Data:", data);
         setModule(data.module);
       } catch (error) {
         console.error("Error fetching module data:", error);
@@ -46,9 +46,8 @@ export default function ModulePage() {
 
     async function fetchModuleItems() {
       try {
-        const res = await fetch(`http://localhost:8000/modules/${module_id}/moduleitems`);
+        const res = await fetch(`${process.env.BACKEND_URL}/modules/${module_id}/moduleitems`);
         const data = await res.json();
-        console.log("Module Items:", data);
         setModuleItems(data.module_items);
       } catch (error) {
         console.error("Error fetching module items:", error);

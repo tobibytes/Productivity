@@ -15,16 +15,17 @@ interface ModuleItemCardProps {
   module_item_download_url: string;
   module_item_size: number;
   module_item_created_at: string;
+  module_course_id: string;
 }
 
 export default function ModuleItemsPage() {
-  const { module_id } = useParams();
+  const { module_id, course_id } = useParams();
   const [moduleItems, setModuleItems] = useState<ModuleItemCardProps[]>([]);
 
   useEffect(() => {
     async function fetchItems() {
       try {
-        const res = await fetch(`http://localhost:8000/modules/${module_id}/moduleitems`);
+        const res = await fetch(`${process.env.BACKEND_URL}/modules/${module_id}/moduleitems`);
         const data = await res.json();
         setModuleItems(data.module_items);
       } catch (error) {
@@ -44,7 +45,7 @@ export default function ModuleItemsPage() {
             key={item.module_item_id}
             className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
           >
-            <ModuleItemCard {...item} />
+           {course_id &&  <ModuleItemCard {...item} /> }
           </div>
         ))}
       </div>

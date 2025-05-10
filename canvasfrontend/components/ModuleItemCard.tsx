@@ -2,19 +2,19 @@
 
 import { useRouter } from "next/navigation";
 
-type ModuleItemCardProps = {
-    module_item_module_id: string;
-    module_item_id: string;
-    module_item_title: string;
-    module_item_filename: string | null;
-    module_item_uuid: string;
-    module_item_type: string;
-    module_item_content_type: string;
-    module_item_download_url: string;
-    module_item_size: number;
-    module_item_created_at: string;
-    module_course_id: string;
-  };
+interface ModuleItemCardProps {
+  module_item_module_id: number;
+  module_item_id: number;
+  module_item_title: string;
+  module_item_filename: string;
+  module_item_uuid: string;
+  module_item_type: string;
+  module_item_content_type: string;
+  module_item_download_url: string;
+  module_item_size: number;
+  module_item_created_at: string;
+  module_course_id: string;
+}
   
   const ModuleItemCard = ({
     module_item_module_id,
