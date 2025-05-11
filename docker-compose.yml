@@ -1,8 +1,8 @@
 services:
 
   canvas:
-    build: ./canvas
-    container_name: canvas
+    build: ./backend
+    container_name: backend
     ports:
       - "8000:8000"
     environment:
@@ -11,37 +11,6 @@ services:
       - MONGO_URI=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
     networks:
       - app-network
-  # main:
-  #   build: ./main
-  #   container_name: main
-  #   environment:
-  #   ports:
-  #     - "5002:5002"
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     - redis
-    
-
-  # redis:
-  #   image: redis:latest
-  #   container_name: redis
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - ./data/redis:/data/redis
-  #   networks:
-  #     - app-network
-  
-  # backend:
-  #   build: ./backend
-  #   container_name: backend
-  #   ports:
-  #     - "5000:5000"
-  #   networks:
-  #     - app-network
-  #   environment:
-  #     - mongo_uri=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
 networks:
   app-network:

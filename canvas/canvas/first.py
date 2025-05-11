@@ -16,13 +16,17 @@ class CanvasFirst:
         """
         Get a list of courses from the Canvas API.
         """
-        url = f"{self.base_url}/courses"
-        response = requests.get(url, headers=self.headers)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise Exception(f"Error fetching courses: {response.status_code} - {response.text}")
-        
+        courses = []
+        for i in range(1, 10):
+            url = f"{self.base_url}/courses?page={i}"
+            response = requests.get(url, headers=self.headers)
+            if response.status_code == 200:
+                courses.extend(response.json())
+            else:
+                pass
+                # raise Exception(f"Error fetching courses: {response.status_code} - {response.text}")
+                
+        return courses
     def _get_cur_semester_courses(self):
         """
         Get the courses for the current semester.

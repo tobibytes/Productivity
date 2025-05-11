@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   env: {
-    BACKEND_URL: "https://38a3-167-99-229-117.ngrok-free.app",
+    BACKEND_URL: "https://2bdc-2607-fb90-a82e-8763-c873-81ed-f658-6c93.ngrok-free.app",
   }
 };
 
