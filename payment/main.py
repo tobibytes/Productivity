@@ -12,7 +12,7 @@ from flask_cors import CORS
 import stripe
 
 # This is your test secret API key.
-stripe.api_key = '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'
+stripe.api_key = 'k_live_51MEwjTLpjISvJMPEKGlgEr3D5jWDs5XU9Bx8FKfXEJKj5aMnVFW7THEDUho9WC5SQWPFkHMHDGaQ4w2pdnH6Lhyhe003ZVr1fOt'
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 CORS(app)
