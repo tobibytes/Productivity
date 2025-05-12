@@ -51,7 +51,6 @@ def login(value: RequestHandler):
     user = db.get_user(email=email)
     if not user:
         return {"error": "Could not login user"}
-    print(user)
     if KeyEncryptor.decrypt(user['api_key']) != api_key:
         return {"error": "Could not login user"}
     return {"email": email, "api_key": user['api_key'], "success": True}
