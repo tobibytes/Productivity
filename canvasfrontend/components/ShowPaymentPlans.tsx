@@ -3,15 +3,17 @@ import PaymentPlan from './PaymentPlan';
 const plans = [
   {
     stripe_payment_plan_id: "prctbl_1RNm71LpjISvJMPEWIHks5Wn",
-    stripe_public_key: "pk_live_51MEwjTLpjISvJMPETOabPmJimxlDll0j9WY1ZL5YnSXhCzjeN5wRwLlplfndf9QlGxPc8RD9QMeRGRZdpe1dy7EX00SyyBwjYF",
+    stripe_public_key: process.env.STRIPE_PUBLIC_KEY || "",
   },
   {
     stripe_payment_plan_id: "prctbl_1RNmDdLpjISvJMPEikWlXfpm",
-    stripe_public_key: "pk_live_51MEwjTLpjISvJMPETOabPmJimxlDll0j9WY1ZL5YnSXhCzjeN5wRwLlplfndf9QlGxPc8RD9QMeRGRZdpe1dy7EX00SyyBwjYF",
+    stripe_public_key: process.env.STRIPE_PUBLIC_KEY || "",
+
   },
   {
     stripe_payment_plan_id: "prctbl_1RNmHQLpjISvJMPEbVdjGk3J",
-    stripe_public_key: "pk_live_51MEwjTLpjISvJMPETOabPmJimxlDll0j9WY1ZL5YnSXhCzjeN5wRwLlplfndf9QlGxPc8RD9QMeRGRZdpe1dy7EX00SyyBwjYF",
+    stripe_public_key: process.env.STRIPE_PUBLIC_KEY || "",
+
   }
 ]
 function ShowPlans() {

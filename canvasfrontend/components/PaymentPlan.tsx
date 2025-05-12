@@ -5,12 +5,15 @@ interface PaymentPlanProps {
 }
 
 
-const PaymentPlan = ( {stripe_payment_plan_id, stripe_public_key } : PaymentPlanProps) => {
-  return (
-    <stripe-pricing-table pricing-table-id={stripe_payment_plan_id}
-publishable-key={stripe_public_key}>
-</stripe-pricing-table>
-  )
-}
+const PaymentPlan = ({ stripe_payment_plan_id, stripe_public_key }: PaymentPlanProps) => {
+  return React.createElement(
+    'stripe-pricing-table',
+    {
+      'pricing-table-id': stripe_payment_plan_id,
+      'publishable-key': stripe_public_key,
+    },
+    null
+  );
+};
 
 export default PaymentPlan
