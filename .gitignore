@@ -9,3 +9,4 @@ data
 venv/
 venv
 docker-compose.yml
+.vscode

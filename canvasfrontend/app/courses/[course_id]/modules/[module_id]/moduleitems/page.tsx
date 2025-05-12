@@ -37,7 +37,7 @@ export default function ModuleItemsPage() {
   }, [module_id]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 py-8">
+    <div className="w-full mx-auto px-6 py-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Module Items</h1>
       <div className="flex flex-wrap gap-6 justify-start">
         {moduleItems.map((item) => (

@@ -39,8 +39,8 @@ const Register = () => {
   };
 
   return (
-    <>
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="min-h-50 min-w-80" id="register">
+    <div className="flex justify-center items-center bg-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -87,11 +87,17 @@ const Register = () => {
           >
             Register
           </button>
+          <p className="text-sm text-gray-500 text-center">
+            Already have an account?{" "}
+            <Link href="/signin" className="text-blue-600 hover:underline">
+              Sign in here
+            </Link>
+          </p>
         </form>
       </div>
     </div>
       { showHowTo && <CanvasTokenGuide />}
-      </>
+      </div>
   );
 };
 

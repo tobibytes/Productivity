@@ -37,7 +37,7 @@ const router = useRouter()
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center bg-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -77,6 +77,12 @@ const router = useRouter()
           >
             Sign In
           </button>
+          <p className="text-sm text-gray-500 text-center">
+            Don't have an account?{" "}
+            <a href="/register" className="text-blue-600 hover:underline">
+              Register here
+            </a>
+          </p>
         </form>
       </div>
     </div>

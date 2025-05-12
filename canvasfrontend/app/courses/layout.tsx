@@ -9,13 +9,13 @@ export default function CoursesLayout({
 }>) {
   const router = useRouter()
   return (
-    <div className="bg-gray-50">
-      <header className="mb-6 pt-8 px-4">
-        <h1 className="text-3xl font-bold text-gray-800" onClick={() => router.push(`/courses`)}>Your Courses</h1>
+    <div className="min-w-screen">
+      <header className="cursor-pointer" onClick={() => router.push(`/courses`)}>
+        <h1 className="text-3xl font-bold text-gray-800">Your Courses</h1>
         <p className="text-sm text-gray-500">Browse all enrolled or available courses</p>
       </header>
 
-      <main className="flex-1 min-h-screen">
+      <main className="flex-1">
         {children}
       </main>
     </div>

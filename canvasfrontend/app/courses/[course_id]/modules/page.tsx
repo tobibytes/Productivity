@@ -50,7 +50,12 @@ const ModulesPage = () => {
           <ModuleCard {...mod} />
         </div>
       ))}
+      {modules.length === 0 && (
+        <div className="w-full text-center py-10 text-gray-500">
+          No modules available for this course. Please check back later.  
     </div>
+      )}
+      </div>
   );
 };
 

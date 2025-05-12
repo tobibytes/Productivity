@@ -16,10 +16,11 @@ export default function RootLayout({
 <html lang="en">
       <body className="min-h-screen bg-white text-gray-800">
         <h1><a href="/">Home</a></h1>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" >
+        <div className="flex flex-wrap justify-center items-center min-h-svh" >
           {children}
         </div>
       </body>
+      <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
     </html>
   );
 }

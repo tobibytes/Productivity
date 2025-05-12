@@ -33,8 +33,8 @@ type AssignmentCardProps = {
     return (
       <div className="bg-white rounded-xl shadow p-5 border border-gray-200 hover:shadow-md transition">
         <div className="flex justify-between items-start mb-2">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800" onClick={() => router.push(`/courses/${assignment_course_id}/assignments/${assignment_id}`)}>{assignment_name}</h3>
+          <div className="cursor-pointer" onClick={() => router.push(`/courses/${assignment_course_id}/assignments/${assignment_id}`)}>
+            <h3 className="text-lg font-semibold text-gray-800" >{assignment_name}</h3>
             <p className="text-sm text-gray-500">Assignment ID: {assignment_id}</p>
           </div>
           <span

@@ -7,7 +7,7 @@ export default function CourseLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className=" bg-gray-50 min-h-screen">
+    <div className="min-w-screen">
       <main className="flex-1">
         {children}
       </main>

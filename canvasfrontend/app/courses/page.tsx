@@ -32,12 +32,17 @@ const CoursesPage = () => {
   }, []);
 
   return (
-    <div className="p-6 flex items-center space-y-6 gap-6 min-h-full">
+    <div className="p-6 flex flex-wrap items-center space-y-6 gap-6 min-h-full">
       {courses.map((course) => (
         <div key={course.course_id} className="w-full max-w-md">
           <CourseCard {...course} />
         </div>
       ))}
+      {courses.length === 0 && (
+        <div className="w-full text-center py-10 text-gray-500">
+          No courses available. Please check back later.
+        </div>
+      )}
     </div>
   );
 };

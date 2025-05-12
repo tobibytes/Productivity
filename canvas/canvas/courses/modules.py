@@ -92,7 +92,7 @@ class Modules:
             module_items_general = self._get_module_items_general(module['id'])
             parsed_module['module_items'] = []
             for module_item_general in module_items_general:
-                print(module_item_general)
+
                 try:
                     parsed_module['module_items'].append(self._parse_module_item(self._get_module_items(module_item_general), module['id']))
                 except Exception as e:

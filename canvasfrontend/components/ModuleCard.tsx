@@ -27,10 +27,10 @@ const ModuleCard = ({
   const router = useRouter()
 
   return (
-    <div className="w-full min-h-[180px] bg-white border border-gray-200 rounded-xl shadow p-4 hover:shadow-md transition" onClick={() => router.push(`/courses/${module_course_id}/modules/${module_id}`)}>
+    <div className="w-full min-h-[180px] bg-white border border-gray-200 rounded-xl shadow p-4 hover:shadow-md transition">
       <div className="flex justify-between items-start mb-3">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800" onClick={() => router.push(`/courses/${module_course_id}/modules/${module_id}/moduleitems`)}>{module_name}</h3>
+        <div className="cursor-pointer" onClick={() => router.push(`/courses/${module_course_id}/modules/${module_id}/moduleitems`)}>
+          <h3 className="text-lg font-semibold text-gray-800">{module_name}</h3>
           <p className="text-sm text-gray-500">Module ID: {module_id}</p>
         </div>
         <span

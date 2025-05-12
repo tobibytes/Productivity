@@ -60,7 +60,8 @@ export default function AssignmentPage() {
           Ready to turn in your work? Click the button below to go to the submission page.
         </p>
         <a
-          href={`/courses/${course_id}/assignments/${assignment_id}/submit`}
+          href={`/pricing`}
+          // href={`/courses/${course_id}/assignments/${assignment_id}/submit`}
           className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
         >
           Go to Submission Page

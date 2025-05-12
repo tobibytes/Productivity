@@ -2,7 +2,9 @@
 
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
+import Markdown from "react-markdown";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ModuleItemPageProps {
   module_item_module_id: string;
@@ -92,14 +94,15 @@ const ModuleItemPage = () => {
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">AI Analysis</h2>
         <div className="prose prose-sm max-w-none">
-          <ReactMarkdown>{moduleItem?.module_item_analysis.analysis}</ReactMarkdown>
+          <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_analysis.analysis}</Markdown>
         </div>
       </section>
 
       <section>
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Raw Markdown Notes</h2>
         <div className="prose prose-sm max-w-none">
-          <ReactMarkdown>{moduleItem?.module_item_markdown}</ReactMarkdown>
+          <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_markdown}</Markdown>
+          
         </div>
       </section>
     </div>

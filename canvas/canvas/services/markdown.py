@@ -11,4 +11,4 @@ def convert_to_markdown(url):
     result =  md.convert(url)
     if result.text_content:
         return result.text_content
-    return 'Not Found'
+    return ''

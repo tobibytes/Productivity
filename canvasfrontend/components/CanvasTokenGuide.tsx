@@ -26,7 +26,7 @@ const steps = [
 
 export default function CanvasTokenGuide() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10 bg-white rounded-lg shadow" id="howto">
+    <div className="mx-auto px-6 py-10 bg-white rounded-lg shadow" id="howto">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">How to Get Your Canvas Access Token</h1>
       <p className="text-gray-600 text-center mb-10">
         Follow these quick steps to generate your personal access token on Canvas.
@@ -41,14 +41,17 @@ export default function CanvasTokenGuide() {
               <Image
                 src={step.image}
                 alt={step.title}
-                width={1000}
-                height={600}
-                className="w-full h-auto object-cover"
+                width={300}
+                height={300}
+                className=""
               />
             </div>
           </div>
         ))}
       </div>
+        <p className="text-sm text-gray-500 mt-6">
+            Once you have your token, <a href="#register" className="text-blue-600 hover:underline">return to the registration form</a> and paste it in the appropriate field.
+        </p>
     </div>
   );
 }

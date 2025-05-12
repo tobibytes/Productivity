@@ -80,6 +80,11 @@ export default function ModulePage() {
             </div>
           ))}
         </div>
+        {moduleItems.length === 0 && (
+          <div className="w-full text-center py-10 text-gray-500">
+            No module items available for this module. Please check back later.
+          </div>
+        )}
       </div>
     </div>
   );

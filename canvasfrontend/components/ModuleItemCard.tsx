@@ -1,5 +1,6 @@
 "use client"
 
+import { DownloadIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ModuleItemCardProps {
@@ -32,9 +33,11 @@ interface ModuleItemCardProps {
     const router = useRouter()
     return (
       <div className="bg-white border border-gray-200 rounded-xl shadow p-4 hover:shadow-md transition">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <h3 className="text-md font-semibold text-gray-800" onClick={() => router.push(`/courses/${module_course_id}/modules/${module_item_module_id}/moduleitems/${module_item_id}`)}>{module_item_title}</h3>
+        <div className="flex justify-between items-start flex-wrap">
+          <div className="cursor-pointer w-4/5" onClick={() => router.push(`/courses/${module_course_id}/modules/${module_item_module_id}/moduleitems/${module_item_id}`)}>
+          <h3 className="text-md font-semibold text-gray-800 truncate" title={module_item_title}>
+  {module_item_title}
+</h3>
             {module_item_filename && (
               <p className="text-sm text-gray-500">Filename: {module_item_filename}</p>
             )}
@@ -45,7 +48,7 @@ interface ModuleItemCardProps {
             rel="noopener noreferrer"
             className="text-blue-600 hover:underline text-sm"
           >
-            Download
+            <DownloadIcon />
           </a>
         </div>
   
