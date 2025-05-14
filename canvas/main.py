@@ -20,6 +20,8 @@
 from canvas import CanvasFirst, Modules, Submissions, Assignments, Database, KeyEncryptor, convert_to_markdown, analyze
 from pydantic import BaseModel
 from typing import Optional
+from dotenv import load_dotenv
+load_dotenv()
 db = Database()
 
 class RequestHandler(BaseModel):

@@ -2,6 +2,9 @@
 from pymongo.mongo_client import MongoClient
 import os
 import bson
+from dotenv import load_dotenv
+load_dotenv()
+#         """
 uri = os.getenv("MONGODB_URI")
 class Database:
     def __init__(self):
