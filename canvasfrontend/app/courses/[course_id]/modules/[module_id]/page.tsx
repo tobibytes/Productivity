@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import ModuleItemCard from "@/components/ModuleItemCard";
 import ModuleCard from "@/components/ModuleCard";
 
@@ -33,6 +33,7 @@ export default function ModulePage() {
   const [module, setModule] = useState<ModuleData | null>(null);
   const [moduleItems, setModuleItems] = useState<ModuleItemCardProps[]>([]);
 
+
   useEffect(() => {
     async function fetchModule() {
       try {
@@ -43,7 +44,7 @@ export default function ModulePage() {
         console.error("Error fetching module data:", error);
       }
     }
-
+    
     async function fetchModuleItems() {
       try {
         const res = await fetch(`${process.env.BACKEND_URL}/modules/${module_id}/moduleitems`);
@@ -76,7 +77,7 @@ export default function ModulePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {moduleItems.map((item) => (
             <div key={item.module_item_id}>
-              <ModuleItemCard {...item} module_course_id={module.module_course_id} />
+              <ModuleItemCard {...item} module_course_id={module.module_course_id}/>
             </div>
           ))}
         </div>

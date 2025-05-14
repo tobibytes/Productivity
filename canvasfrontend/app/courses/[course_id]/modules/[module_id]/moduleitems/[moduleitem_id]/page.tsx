@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -49,16 +49,35 @@ const moduleItemSample : ModuleItemPageProps= {
 const ModuleItemPage = () => {
 
     const { moduleitem_id, module_id, course_id} = useParams();
-    const [moduleItem, setModuleItem] = React.useState<ModuleItemPageProps>(moduleItemSample);
+    const [moduleItem, setModuleItem] = useState<ModuleItemPageProps>(moduleItemSample);
     const readablePriority = ["Low", "Medium", "High"][moduleItem?.module_item_analysis?.priority - 1] || "Unknown";
 
-  useEffect(() => {
-    async function fetchData() {
+    const [is_subscribed, setIsSubscribed] = useState(false);
+
+
+    async function fetchSubscription() {
+      try {
+        const res = await fetch(`${process.env.BACKEND_URL}/users/${sessionStorage.getItem("email")}`);
+        const data = await res.json();
+        console.log('subscription', data)
+        setIsSubscribed(data.user);
+      }
+      catch (error) {
+        console.error("Error fetching subscription data:", error);
+      }
+    }
+    
+    useEffect(() => {
+    },[])
+    
+    useEffect(() => {
+      async function fetchData() {
         const res = await fetch(`${process.env.BACKEND_URL}/modules/${module_id}/moduleitems/${moduleitem_id}`)
         const data = await res.json();
         setModuleItem(data.module_item)
-    }
-    fetchData()
+      }
+      fetchSubscription();
+      fetchData()
   },[])
 
   return (
@@ -94,15 +113,24 @@ const ModuleItemPage = () => {
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">AI Analysis</h2>
         <div className="prose prose-sm max-w-none">
-          <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_analysis.analysis}</Markdown>
+          {is_subscribed && <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_analysis.analysis}</Markdown>}
+          {!is_subscribed && (
+            <p className="text-gray-500">
+              You need to subscribe to view the AI analysis. Please check our <a href="/pricing" className="text-blue-600">pricing plans</a>.
+            </p>
+          )}
         </div>
       </section>
 
       <section>
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Raw Markdown Notes</h2>
         <div className="prose prose-sm max-w-none">
-          <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_markdown}</Markdown>
-          
+          {is_subscribed && <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_markdown}</Markdown>}
+          {!is_subscribed && (
+            <p className="text-gray-500">
+              You need to subscribe to view the AI analysis. Please check our <a href="/pricing" className="text-blue-600">pricing plans</a>.
+            </p>
+          )}
         </div>
       </section>
     </div>

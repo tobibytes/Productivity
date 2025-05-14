@@ -1,3 +1,6 @@
+'use client'
+
+
 import ShowPlans from '@/components/ShowPaymentPlans'
 import React from 'react'
 

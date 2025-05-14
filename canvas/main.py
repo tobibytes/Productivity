@@ -26,6 +26,10 @@ class RequestHandler(BaseModel):
     email: Optional[str] = None
     api_key: Optional[str] = None
 
+class SuscribeToPricing(BaseModel):
+    email: str
+    pricing_id: Optional[str] = None
+
 import threading
 from fastapi import FastAPI
 
@@ -65,12 +69,12 @@ def register(value: RequestHandler):
     else:
         user_canvas = CanvasFirst(api_key=api_key, email=email)
         user_info = user_canvas.get_user_and_courses()
+        user_info['pricing_id'] =  None
         db.add_user(user_info)
         api_key = KeyEncryptor.decrypt(user_info['api_key'])
         email = user_info['email']
         def populate():
             for course in user_info['courses']:
-                
                 # add modules
                 modules = Modules(course_id= course['course_id'], api_key=api_key)
 
@@ -96,6 +100,14 @@ def register(value: RequestHandler):
         thread.start()
         return {"status": "User registered successfully", "success": True}
     return {"error": "Could not register user"}
+
+@app.get("/users/{email}")
+def get_user(email: str):
+    user_info = db.get_user(email=email)
+    if not user_info:
+        return {"error": "Could not login user"}
+    user_info['api_key'] = KeyEncryptor.decrypt(user_info['api_key'])
+    return {"user": user_info}
 
 
 @app.get("/courses")
@@ -149,3 +161,29 @@ def get_assignments(course_id: str):
 def get_assignment(assignment_id: str, course_id: str):
     assignment = db.get_assignment(assignment_id=assignment_id, course_id=course_id)
     return {"assignment": assignment}
+
+@app.get("/pricings")
+def get_pricings(email: Optional[str] = None):
+    """
+    Get all pricings
+    """
+    pricings = db.get_pricings()
+    if email or email != "null":
+        print(email)
+        pricing_id = db.get_user_pricing(email=email)
+        for idx, pricing in enumerate(pricings):
+            if pricings[idx]['id'] == pricing_id:
+                pricings[idx]['is_active'] = True
+            else:
+                pricings[idx]['is_active'] = False
+    return {"pricings": pricings}
+
+@app.post("/users/pricings/")
+def suscribe_to_pricing(data: SuscribeToPricing):
+    email = data.email
+    pricing_id = data.pricing_id
+    user = db.get_user(email=email)
+    if not user:
+        return {"error": "Could not login user"}
+    db.subsribe_user(email=email, pricing_id=pricing_id)
+    return {"status": "User subscribed to pricing successfully", "success": True}
