@@ -8,7 +8,10 @@ md = MarkItDown(llm_client = client, llm_model="gpt-4o")
 
 
 def convert_to_markdown(url):
-    result =  md.convert(url)
-    if result.text_content:
-        return result.text_content
-    return ''
+    try:
+        result =  md.convert(url)
+        if result.text_content:
+            return result.text_content
+        return ''
+    except:
+        return ''

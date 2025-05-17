@@ -123,12 +123,8 @@ const ModuleItemPage = () => {
       <section>
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Raw Markdown Notes</h2>
         <div className="prose prose-sm max-w-none">
-          {is_subscribed && <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_markdown}</Markdown>}
-          {!is_subscribed && (
-            <p className="text-gray-500">
-              You need to subscribe to view the AI analysis. Please check our <a href="/pricing" className="text-blue-600">pricing plans</a>.
-            </p>
-          )}
+          <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_markdown}</Markdown>
+
         </div>
       </section>
     </div>
