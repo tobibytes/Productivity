@@ -60,9 +60,9 @@ class Database:
         courses = user_info['courses']
         result = []
         for course in courses:
-            course_modules = db.get_modules(course['course_id'])
+            course_modules = self.get_modules(course['course_id'])
             for module in course_modules:
-                course_module_items = db.get_module_items(module['module_id'])
+                course_module_items = self.get_module_items(module['module_id'])
                 for module_item in course_module_items:
                     data = {
                         "course_id": course["course_id"],

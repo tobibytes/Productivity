@@ -162,28 +162,7 @@ def get_assignment(assignment_id: str, course_id: str):
     assignment = db.get_assignment(assignment_id=assignment_id, course_id=course_id)
     return {"assignment": assignment}
 
-@app.get("/pricings")
-def get_pricings(email: Optional[str] = None):
-    """
-    Get all pricings
-    """
-    pricings = db.get_pricings()
-    if email or email != "null":
-        print(email)
-        pricing_id = db.get_user_pricing(email=email)
-        for idx, pricing in enumerate(pricings):
-            if pricings[idx]['id'] == pricing_id:
-                pricings[idx]['is_active'] = True
-            else:
-                pricings[idx]['is_active'] = False
-    return {"pricings": pricings}
-
-@app.post("/users/pricings/")
-def suscribe_to_pricing(data: SuscribeToPricing):
-    email = data.email
-    pricing_id = data.pricing_id
-    user = db.get_user(email=email)
-    if not user:
-        return {"error": "Could not login user"}
-    db.subsribe_user(email=email, pricing_id=pricing_id)
-    return {"status": "User subscribed to pricing successfully", "success": True}
+@app.get("/moduleitems/{module_item_id}/note")
+def get_note(module_item_id: str, email: str):
+    note = db.get_note(module_item_id, email)
+    return { "note": note["note"]}

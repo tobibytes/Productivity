@@ -20,7 +20,9 @@ class Database:
             self.module_items_col = self.db.create_collection('module_items')
             self.assignments_col = self.db.create_collection('assignments')
             self.submissions_col = self.db.create_collection('submissions')
+            self.notes_col = self.db.create_collection('notes')
             self.pricing_col = self.db.create_collection('pricing')
+            self.flashcards_col = self.db.create_collection('flashcards')
 
         except:
             self.user_col = self.db.user
@@ -29,6 +31,8 @@ class Database:
             self.assignments_col = self.db.assignments
             self.submissions_col = self.db.submissions
             self.pricing_col = self.db.pricing
+            self.flashcards_col = self.db.flashcards
+            self.notes_col = self.db.notes
         try:
             self.user_col.create_index('email', unique=True)
             # self.modules_col.create_index('module_id', unique=True)
@@ -63,6 +67,9 @@ class Database:
         Add a module to the database.
         """
         self.modules_col.insert_one(module)
+        
+    def get_note(self, module_item_id, email):
+        return self.format_for_db(self.notes_col.find_one({'module_item_id': module_item_id, 'email': email}))
         
     def get_modules(self, course_id):
         """

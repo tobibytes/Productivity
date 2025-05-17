@@ -48,6 +48,7 @@ const ModuleItemPage = () => {
 
     const { moduleitem_id, module_id, course_id} = useParams();
     const [moduleItem, setModuleItem] = useState<ModuleItemPageProps>(moduleItemSample);
+    const [AiNotes, setAiNotes] = useState("")
     // const readablePriority = ["Low", "Medium", "High"][moduleItem?.module_item_analysis?.priority - 1] || "Unknown";
 
     const [is_subscribed, setIsSubscribed] = useState(false);
@@ -64,9 +65,24 @@ const ModuleItemPage = () => {
         console.error("Error fetching subscription data:", error);
       }
     }
+
+    async function fetchNote() {
+      try {
+        const email = sessionStorage.getItem("email")
+        const res = await fetch(`${process.env.BACKEND_URL}/moduleitems/${moduleItem.module_item_id}/note?email=${email}`)
+        const data = await res.json()
+        if (data.note) setAiNotes(data.note.analysis)
+      }
+      catch (error) {
+        console.log("Error getting user's notes")
+      }
+    }
     
     useEffect(() => {
-    },[])
+
+      fetchNote()
+
+    },[is_subscribed])
     
     useEffect(() => {
       async function fetchData() {
@@ -111,7 +127,7 @@ const ModuleItemPage = () => {
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">AI Analysis</h2>
         <div className="prose prose-sm max-w-none">
-          {/* {is_subscribed && <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_analysis.analysis}</Markdown>} */}
+          {is_subscribed && <Markdown remarkPlugins={[remarkGfm]}>{AiNotes}</Markdown>}
           {!is_subscribed && (
             <p className="text-gray-500">
               You need to subscribe to view the AI analysis. Please check our <a href="/pricing" className="text-blue-600">pricing plans</a>.

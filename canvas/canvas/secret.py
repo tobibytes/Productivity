@@ -3,7 +3,7 @@ import os
 import base64
 
 class KeyEncryptor:
-    _key_path = '../key.txt'
+    _key_path = './key.txt'
 
     if os.path.exists(_key_path):
         with open(_key_path, 'rb') as f:

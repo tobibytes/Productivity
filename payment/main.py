@@ -5,6 +5,7 @@ import os
 import stripe
 import redis
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 from db import Database
 from pydantic import BaseModel
@@ -17,6 +18,7 @@ stripe.api_key = os.getenv("STRIPE_API_KEY")
 endpoint_secret = os.getenv("STRIPE_ENDPOINT_SECRET", "")
 
 app = Flask(__name__)
+CORS(app)
 @app.route('/index')
 def read_root():
     return {"Hello": "World"}
@@ -40,21 +42,28 @@ def webhook():
         raise e
 
     # Handle the event
-    if event['type'] == 'charge.failed':
-      charge = event['data']['object']
-      data = charge
-    # elif event['type'] == 'charge.pending':
+    # if event['type'] == 'charge.failed':
     #   charge = event['data']['object']
     #   data = charge
-    elif event['type'] == 'charge.succeeded':
-      charge = event['data']['object']
-      data = charge
+    # # elif event['type'] == 'charge.pending':
+    # #   charge = event['data']['object']
+    # #   data = charge
+    # elif event['type'] == 'charge.succeeded':
+    #   charge = event['data']['object']
+    #   data = charge
     elif event['type'] == 'checkout.session.completed':
       session = event['data']['object']
       data = session
-      data = db.subscribe_user(session['customer_email'], session['client_reference_id'])
-      r.xadd("ai.tasks", data)
-    # ... handle other event types
+      user = db.get_user(email=data['customer_email'])
+      if not user:
+          raise Exception(f"error: Could not verify user")
+      if user["pricing_id"] == data['client_reference_id']:
+        raise Exception(f"error: Already subscribed to this plan")
+      data = db.subscribe_user(data['customer_email'], data['client_reference_id'])
+      r.xadd("ai.tasks", {
+        "event": "start_full_analysis",
+        "email": user['email']
+      })
     else:
       print('Unhandled event type {}'.format(event['type']))
     return jsonify(success=True)
