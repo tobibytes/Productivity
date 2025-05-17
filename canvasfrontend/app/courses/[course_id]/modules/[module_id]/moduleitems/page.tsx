@@ -19,7 +19,9 @@ interface ModuleItemCardProps {
 }
 
 export default function ModuleItemsPage() {
-  const { module_id, course_id } = useParams();
+  const params = useParams();
+  const module_id = Array.isArray(params.module_id) ? params.module_id[0] : params.module_id;
+  const course_id = Array.isArray(params.course_id) ? params.course_id[0] : params.course_id;
   const [moduleItems, setModuleItems] = useState<ModuleItemCardProps[]>([]);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function ModuleItemsPage() {
             key={item.module_item_id}
             className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
           >
-           {course_id &&  <ModuleItemCard {...item} /> }
+           {course_id &&  <ModuleItemCard {...item} module_course_id={course_id} /> }
           </div>
         ))}
       </div>

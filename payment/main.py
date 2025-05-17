@@ -51,7 +51,7 @@ def webhook():
     # elif event['type'] == 'charge.succeeded':
     #   charge = event['data']['object']
     #   data = charge
-    elif event['type'] == 'checkout.session.completed':
+    if event['type'] == 'checkout.session.completed':
       session = event['data']['object']
       data = session
       user = db.get_user(email=data['customer_email'])

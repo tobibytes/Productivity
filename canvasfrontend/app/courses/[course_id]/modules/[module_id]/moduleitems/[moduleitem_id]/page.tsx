@@ -58,7 +58,6 @@ const ModuleItemPage = () => {
       try {
         const res = await fetch(`${process.env.BACKEND_URL}/users/${sessionStorage.getItem("email")}`);
         const data = await res.json();
-        console.log('subscription', data)
         setIsSubscribed(data.user.pricing_id);
       }
       catch (error) {
