@@ -14,4 +14,4 @@ stripe
 flask
 flask-cors
 redis
-"redis[hiredis]"
+redis[hiredis]

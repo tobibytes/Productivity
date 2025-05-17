@@ -18,7 +18,7 @@ function ShowPlans() {
     const email = sessionStorage.getItem('email');
 
     async function fetchPlans() {
-      const response = await fetch(`${process.env.BACKEND_URL}/pricings?email=${email}`);
+      const response = await fetch(`${process.env.PAYMENT_URL}/pricings?email=${email}`);
       const data = await response.json();
       const userCurrentPlan = data.pricings.filter((plan: PlanType) => plan.is_active === true);
       const otherPlans = data.pricings.filter((plan: PlanType) => plan.is_active === false);

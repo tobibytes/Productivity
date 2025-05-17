@@ -7,10 +7,11 @@ import redis
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 from db import Database
-
+from pydantic import BaseModel
+import redis
+r = redis.Redis(host="redis", port=6379)
 load_dotenv()
 db = Database()
-r = redis.Redis(host="redis", port=6379)
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 
 endpoint_secret = os.getenv("STRIPE_ENDPOINT_SECRET", "")
@@ -83,18 +84,24 @@ class POSTSUBSCRIBETOPRICING(BaseModel):
   
 @app.route("/users/pricings/", methods=["POST"])
 def suscribe_to_pricing():
-  data = request.get_json()
-  data = POSTSUBSCRIBETOPRICING(**data)
-  if not data:
-      return {"error": "Could not verify user"}
+    data = request.get_json()
+    data = POSTSUBSCRIBETOPRICING(**data)
+    if not data:
+        return {"error": "Could not verify user"}
     email = data.email
     pricing_id = data.pricing_id
     user = db.get_user(email=email)
     if not user:
         return {"error": "Could not verify user"}
+    if user["pricing_id"] == pricing_id:
+      return {"error": "Already subscribed to this plan"}
     result = db.subsribe_user(email=email, pricing_id=pricing_id)
+    r.xadd("ai.task", {
+      "event": "start_full_analysis",
+      "email": email
+    })
     return {"status": "User subscribed to pricing successfully", "success": True}
   
 
 if __name__ == "__main__":
-  app.run(port=4242, debug=True, host='0.0.0.0')
+  app.run(port=4242, host='0.0.0.0')

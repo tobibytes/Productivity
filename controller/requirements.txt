@@ -1,0 +1,5 @@
+redis
+redis[hiredis]
+pymongo
+pymongo[srv]
+python-dotenv
