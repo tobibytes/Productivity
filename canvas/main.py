@@ -85,7 +85,6 @@ def register(value: RequestHandler):
                     module_items = all_modules[j]['module_items']
                     for i in range(len(module_items)):
                         item_markdown = convert_to_markdown(module_items[i]['module_item_download_url'])
-                        analysis = analyze(item_markdown)
                         all_modules[j]['module_items'][i]['module_item_markdown'] = item_markdown
                 for module in all_modules:
                     module_items = module.pop('module_items')

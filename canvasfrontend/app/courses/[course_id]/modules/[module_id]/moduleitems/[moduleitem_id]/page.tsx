@@ -17,11 +17,9 @@ interface ModuleItemPageProps {
   module_item_download_url: string;
   module_item_size: number;
   module_item_created_at: string;
-  module_item_analysis: {
-    title: string;
-    analysis: string;
-    priority: number;
-  };
+  // module_item_analysis: {
+  //   analysis: string;
+  // };
   module_item_markdown: string;
 }
 
@@ -37,11 +35,11 @@ const moduleItemSample : ModuleItemPageProps= {
     "test",
   module_item_size: 128540,
   module_item_created_at: "2025-02-07T12:20:43Z",
-  module_item_analysis: {
-    title: "AI Analysis Title",
-    analysis: "This is the AI analysis content.",
-    priority: 2,
-  },
+  // module_item_analysis: {
+  //   title: "AI Analysis Title",
+  //   analysis: "This is the AI analysis content.",
+  //   priority: 2,
+  // },
   module_item_markdown:
     "# Markdown Notes\n\nThis is a sample markdown note for the item.",
 };
@@ -50,7 +48,7 @@ const ModuleItemPage = () => {
 
     const { moduleitem_id, module_id, course_id} = useParams();
     const [moduleItem, setModuleItem] = useState<ModuleItemPageProps>(moduleItemSample);
-    const readablePriority = ["Low", "Medium", "High"][moduleItem?.module_item_analysis?.priority - 1] || "Unknown";
+    // const readablePriority = ["Low", "Medium", "High"][moduleItem?.module_item_analysis?.priority - 1] || "Unknown";
 
     const [is_subscribed, setIsSubscribed] = useState(false);
 
@@ -83,9 +81,9 @@ const ModuleItemPage = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-10">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">
+        {/* <h1 className="text-3xl font-bold text-gray-800">
           {moduleItem.module_item_analysis.title || moduleItem.module_item_title}
-        </h1>
+        </h1> */}
         <p className="text-gray-500 text-sm">
           Uploaded on {new Date(moduleItem?.module_item_created_at).toLocaleDateString()} • {Math.round(moduleItem.module_item_size / 1024)} KB
         </p>
@@ -96,7 +94,7 @@ const ModuleItemPage = () => {
         <p><span className="font-medium">Type:</span> {moduleItem?.module_item_type} ({moduleItem.module_item_content_type})</p>
         <p><span className="font-medium">Module ID:</span> {moduleItem?.module_item_module_id}</p>
         <p><span className="font-medium">Item ID:</span> {moduleItem?.module_item_id}</p>
-        <p><span className="font-medium">Priority:</span> {readablePriority}</p>
+        {/* <p><span className="font-medium">Priority:</span> {readablePriority}</p> */}
 
         <a
           href={moduleItem?.module_item_download_url}
@@ -113,7 +111,7 @@ const ModuleItemPage = () => {
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">AI Analysis</h2>
         <div className="prose prose-sm max-w-none">
-          {is_subscribed && <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_analysis.analysis}</Markdown>}
+          {/* {is_subscribed && <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_analysis.analysis}</Markdown>} */}
           {!is_subscribed && (
             <p className="text-gray-500">
               You need to subscribe to view the AI analysis. Please check our <a href="/pricing" className="text-blue-600">pricing plans</a>.

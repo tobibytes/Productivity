@@ -3,7 +3,7 @@ import os
 import base64
 
 class KeyEncryptor:
-    _key_path = 'key.txt'
+    _key_path = '../key.txt'
 
     if os.path.exists(_key_path):
         with open(_key_path, 'rb') as f:
@@ -28,3 +28,6 @@ class KeyEncryptor:
         nonce, ciphertext = raw[:12], raw[12:]
         plaintext = KeyEncryptor._aesgcm.decrypt(nonce, ciphertext, None)
         return plaintext.decode()
+
+
+
