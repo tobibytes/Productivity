@@ -1,0 +1,8 @@
+redis
+redis[hiredis]
+stripe
+pymongo[srv]
+pymongo
+flask
+flask-cors
+python-dotenv

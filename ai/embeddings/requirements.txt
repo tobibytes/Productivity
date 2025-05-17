@@ -1,0 +1,7 @@
+redis
+redis[hiredis]
+openai
+pymongo
+pymongo[srv]
+python-dotenv
+numpy

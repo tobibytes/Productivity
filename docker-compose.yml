@@ -1,17 +1,61 @@
 services:
 
-  canvas:
-    build: ./backend
-    container_name: backend
+  # canvas:
+  #   build: ./backend
+  #   container_name: backend
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - CANVAS_ACCESS_TOKEN=13154~JerZ2enk78z7wwRue29ZGcy4BhXVDQx7CWcFaMNTetT7E9uADWfyWPWEQ36rQAzf
+  #     - OPENAI_API_KEY=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
+  #     - MONGO_URI=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+  #   networks:
+  #     - app-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
     ports:
-      - "8000:8000"
-    environment:
-      - CANVAS_ACCESS_TOKEN=13154~JerZ2enk78z7wwRue29ZGcy4BhXVDQx7CWcFaMNTetT7E9uADWfyWPWEQ36rQAzf
-      - OPENAI_API_KEY=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
-      - MONGO_URI=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+     - "6379:6379"
     networks:
       - app-network
+  embedding:
+    build: ./ai/embeddings
+    container_name: embeddings
+    environment:
+      - STRIPE_API_KEY=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
+      - MONGODB_URI=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - OPENAI_API_KEY=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
+      - STRIPE_ENDPOINT_SECRET=whsec_eKUXjNeDUMGUyrQLYOPBCJ3tmjqhQuFN    
+    networks:
+     - app-network
+    depends_on:
+      - redis
 
+  flashcards:
+    build: ./ai/flashcards
+    container_name: flashcards
+    environment:
+      - STRIPE_API_KEY=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
+      - MONGODB_URI=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - OPENAI_API_KEY=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
+      - STRIPE_ENDPOINT_SECRET=whsec_eKUXjNeDUMGUyrQLYOPBCJ3tmjqhQuFN
+    networks:
+      - app-network
+    depends_on:
+      - redis
+  notes:
+    build: ./ai/notes
+    container_name: notes
+    environment:
+      - STRIPE_API_KEY=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
+      - MONGODB_URI=mongodb+srv://tobiolajide01:Zi8w8X0bsvNQQOhA@cluster0.w6c3l.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - OPENAI_API_KEY=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
+      - STRIPE_ENDPOINT_SECRET=whsec_eKUXjNeDUMGUyrQLYOPBCJ3tmjqhQuFN
+    networks:
+      - app-network
+    depends_on:
+      - redis
 networks:
   app-network:
     driver: bridge

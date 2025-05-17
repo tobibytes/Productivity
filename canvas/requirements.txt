@@ -13,3 +13,5 @@ pymongo
 stripe
 flask
 flask-cors
+redis
+"redis[hiredis]"

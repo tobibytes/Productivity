@@ -17,7 +17,7 @@
 #     redis.set('canvas_last_time', new_date)
 #     time.sleep(3600)
 
-from canvas import CanvasFirst, Modules, Submissions, Assignments, Database, KeyEncryptor, convert_to_markdown, analyze
+from canvas import CanvasFirst, Modules, Submissions, Assignments, Database, KeyEncryptor, convert_to_markdown
 from pydantic import BaseModel
 from typing import Optional
 from dotenv import load_dotenv
@@ -86,7 +86,6 @@ def register(value: RequestHandler):
                     for i in range(len(module_items)):
                         item_markdown = convert_to_markdown(module_items[i]['module_item_download_url'])
                         analysis = analyze(item_markdown)
-                        all_modules[j]['module_items'][i]['module_item_analysis'] = analysis
                         all_modules[j]['module_items'][i]['module_item_markdown'] = item_markdown
                 for module in all_modules:
                     module_items = module.pop('module_items')
