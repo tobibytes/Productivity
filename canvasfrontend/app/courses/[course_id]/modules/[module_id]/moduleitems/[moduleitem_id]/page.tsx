@@ -72,6 +72,7 @@ const ModuleItemPage = () => {
         const res = await fetch(`${process.env.BACKEND_URL}/moduleitems/${moduleItem.module_item_id}/note?email=${email}`)
         const data = await res.json()
         if (data.note) setAiNotes(data.note.analysis)
+        else setAiNotes("Could not analyze")
       }
       catch (error) {
         console.log("Error getting user's notes")
