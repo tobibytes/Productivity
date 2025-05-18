@@ -84,8 +84,12 @@ def register(value: RequestHandler):
                 for j in range(len((all_modules))):
                     module_items = all_modules[j]['module_items']
                     for i in range(len(module_items)):
-                        item_markdown = convert_to_markdown(module_items[i]['module_item_download_url'])
-                        all_modules[j]['module_items'][i]['module_item_markdown'] = item_markdown
+                        try:
+                            item_markdown = convert_to_markdown(module_items[i]['module_item_download_url'])
+                            all_modules[j]['module_items'][i]['module_item_markdown'] = item_markdown
+                        except:
+                            all_modules[j]['module_items'][i]['module_item_markdown'] = ""
+                            
                 for module in all_modules:
                     module_items = module.pop('module_items')
                     db.add_module(module)

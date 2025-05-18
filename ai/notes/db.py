@@ -23,6 +23,7 @@ class Database:
             self.module_items_col = self.db.create_collection('module_items')
             self.assignments_col = self.db.create_collection('assignments')
             self.submissions_col = self.db.create_collection('submissions')
+            
 
         except:
             self.notes_col = self.db.notes

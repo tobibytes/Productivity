@@ -13,11 +13,23 @@ class Database:
         self.db = self.client.db
         try:
             self.user_col = self.db.create_collection('user')
+            self.modules_col = self.db.create_collection('modules')
+            self.module_items_col = self.db.create_collection('module_items')
+            self.assignments_col = self.db.create_collection('assignments')
+            self.submissions_col = self.db.create_collection('submissions')
+            self.notes_col = self.db.create_collection('notes')
             self.pricing_col = self.db.create_collection('pricing')
+            self.flashcards_col = self.db.create_collection('flashcards')
 
         except:
             self.user_col = self.db.user
+            self.modules_col = self.db.modules
+            self.module_items_col = self.db.module_items
+            self.assignments_col = self.db.assignments
+            self.submissions_col = self.db.submissions
             self.pricing_col = self.db.pricing
+            self.flashcards_col = self.db.flashcards
+            self.notes_col = self.db.notes
         try:
             self.user_col.create_index('email', unique=True)
             self.user_col.create_index('status')   
