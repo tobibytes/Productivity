@@ -1,36 +1,20 @@
-import Flashcard from "@/components/Flashcard";
+import Flashcard, { FlashcardProps } from "@/components/Flashcard";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const flashcards = [
-  {
-    question: "What is active recall?",
-    answer:
-      "A learning technique where you try to remember information without looking at the source, strengthening memory connections.",
-  },
-  {
-    question: "What does dual coding theory suggest?",
-    answer:
-      "That combining visual and verbal information enhances learning and memory retention.",
-  },
-  {
-    question: "Why use spaced repetition?",
-    answer:
-      "It helps retain information longer by reviewing just before you're likely to forget.",
-  },
-  {
-    question: "What's a good flashcard layout?",
-    answer:
-      "Use a single question on the front, and a focused, concise answer on the back with spacing and emphasis on key terms.",
-  },
-  {
-    question: "How do visuals help flashcards?",
-    answer:
-      "They activate dual channels in the brain, improving memory encoding and recall speed.",
-  },
-];
-const [flashcard, setFlashcard] = useState(flashcards);
-
 export default function FlashcardsPage() {
+  const {moduleitem_id} = useParams();
+  const [flashcards, setFlashcards] = useState<FlashcardProps[]>([]);
+
+  useEffect(() => {
+    async function fetchFlashcards() {
+      const response = await fetch(`${process.env.BACKEND_URL}/moduleitems/${moduleitem_id}/flashcards`);
+      const data = await response.json();
+      setFlashcards(data.flashcards);
+    }
+    fetchFlashcards();
+  },[]);
+
   return (
     <div className="w-full px-6 py-10">
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">

@@ -54,6 +54,7 @@ def read_root():
 def login(value: RequestHandler):
     email = value.email
     api_key = value.api_key
+    print(value)
     user = db.get_user(email=email)
     print(user)
     if not user:
@@ -170,4 +171,13 @@ def get_assignment(assignment_id: str, course_id: str):
 @app.get("/moduleitems/{module_item_id}/note")
 def get_note(module_item_id: str, email: str):
     note = db.get_note(module_item_id, email)
-    return { "note": note["note"]}
+    if note:
+        return { "note": note["note"]}
+    return {"error": "Note not found"}
+
+@app.get("/moduleitems/{module_item_id}/flashcards")
+def get_flashcards(module_item_id: str, email: str):
+    flashcards = db.get_flashcards(module_item_id, email)
+    if flashcards:
+        return flashcards['flashcards']
+    return {"error": "Flashcards not found"}

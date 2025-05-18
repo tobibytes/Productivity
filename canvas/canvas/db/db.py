@@ -116,6 +116,16 @@ class Database:
             return self.format_for_db(module_item)
         else:
             return None
+        
+    def get_flashcards(self, module_item_id, email):
+        """
+        Get all flashcards for a module item from the database.
+        """
+        flashcards = self.flashcards_col.find_one({'module_item_id': module_item_id, 'email': email})
+        if flashcards:
+            return self.format_for_db(flashcards)
+        else:
+            return None
     
     def add_assignment(self, assignment):
         """
@@ -204,4 +214,4 @@ class Database:
         """
         if data and '_id' in data:
             data['_id'] = str(data['_id'])
-        return {}
+        return data

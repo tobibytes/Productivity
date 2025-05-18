@@ -95,5 +95,7 @@ class Database:
         """
         Remove the BSON ObjectId from the data.
         """
-        data['_id'] = str(data['_id'])
-        return data
+        if '_id' in data:
+            data['_id'] = str(data['_id'])
+            return data
+        data

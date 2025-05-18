@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-interface FlashcardProps {
+export interface FlashcardProps {
   question: string;
   answer: string;
 }
