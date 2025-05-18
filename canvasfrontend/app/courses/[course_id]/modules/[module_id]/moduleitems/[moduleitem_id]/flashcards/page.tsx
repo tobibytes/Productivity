@@ -1,3 +1,4 @@
+"use client"
 import Flashcard, { FlashcardProps } from "@/components/Flashcard";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
