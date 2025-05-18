@@ -124,11 +124,11 @@ const ModuleItemPage = () => {
       </section>
 
       <hr className="my-8" />
+          <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4 cursor-pointer" onClick={() => router.push(`/courses/${course_id}/modules/${module_id}/moduleitems/${moduleitem_id}/flashcards`)}>Go to Flashcards</button>
 
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">AI Analysis</h2>
         <div className="prose prose-sm max-w-none">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4" onClick={() => router.push(`/courses/${course_id}/modules/${module_id}/moduleitems/${moduleitem_id}/flashcards`)}>Go to Flashcards</button>
           {is_subscribed && <Markdown remarkPlugins={[remarkGfm]}>{AiNotes}</Markdown>}
           {!is_subscribed && (
             <p className="text-gray-500">

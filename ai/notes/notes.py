@@ -26,6 +26,7 @@ class NoteSummarizer:
                                 "   - Use **examples** and **analogies** where appropriate.\n"
                                 "   - Use bullet points, headings, and highlights to organize complex information.\n"
                                 "3. If the content *implies an action or assignment*, you may also:\n"
+                                "also include a **slide** that is well-structured and can be rendered using reveal.js. It should be in slides format, for example:\n"
                                 "   - Give tips on how to approach it.\n"
                                 "Be thorough, kind, and clear. You're here to make learning easier, not just faster. Also add good amount of spacing between the sections and text so it could be readable.\n\n"
                             )
@@ -49,6 +50,10 @@ class NoteSummarizer:
                                 "type": "string",
                                 "description": "A thoughtful, detailed explanation with a title in Markdown because it would be rendered in markdown, with analogies, examples, and clear structure. add good amount of spacing between the sections and text so it could be readable. Make it long and interesting to read too"
                             },
+                            "slide": {
+                                "type": "string",
+                                "description": "A thoughtful, detailed explanation in markdown that can be rendered using reveal js, so it should be in slides for example slide1 then content, then slide2 then content, it should be very explanatory and presentable like of the content."
+                            }
                         },
                         "additionalProperties": False
                     },
