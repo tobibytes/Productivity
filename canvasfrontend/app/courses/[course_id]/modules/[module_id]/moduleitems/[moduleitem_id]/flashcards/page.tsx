@@ -7,8 +7,9 @@ export default function FlashcardsPage() {
   const [flashcards, setFlashcards] = useState<FlashcardProps[]>([]);
 
   useEffect(() => {
+    const email = sessionStorage.getItem("email");
     async function fetchFlashcards() {
-      const response = await fetch(`${process.env.BACKEND_URL}/moduleitems/${moduleitem_id}/flashcards`);
+      const response = await fetch(`${process.env.BACKEND_URL}/moduleitems/${moduleitem_id}/flashcards?email=${email}`);
       const data = await response.json();
       setFlashcards(data.flashcards);
     }
