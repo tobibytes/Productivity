@@ -1,4 +1,4 @@
-"use client";
+
 import Link from "next/link";
 
 const routes = [
@@ -10,6 +10,8 @@ const routes = [
 ];
 
 export default function HomePage() {
+
+  
   return (
     <div className="flex flex-wrap gap-6">
       <div className="flex flex-wrap gap-6">

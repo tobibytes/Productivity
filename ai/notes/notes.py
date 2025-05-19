@@ -44,7 +44,7 @@ class NoteSummarizer:
                     "name": "module_schema",
                     "schema": {
                         "type": "object",
-                        "required": ["analysis"],
+                        "required": ["analysis", "slide"],
                         "properties": {
                             "analysis": {
                                 "type": "string",

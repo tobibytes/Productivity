@@ -1,10 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+const Slides = dynamic(() => import("@/components/Slides"), { ssr: false });
 
 interface ModuleItemPageProps {
   module_item_module_id: string;
@@ -49,6 +51,7 @@ const ModuleItemPage = () => {
     const { moduleitem_id, module_id, course_id} = useParams();
     const [moduleItem, setModuleItem] = useState<ModuleItemPageProps>(moduleItemSample);
     const [AiNotes, setAiNotes] = useState("")
+    const [slideNotes, setSlideNotes] = useState("")
     // const readablePriority = ["Low", "Medium", "High"][moduleItem?.module_item_analysis?.priority - 1] || "Unknown";
 
     const [is_subscribed, setIsSubscribed] = useState(false);
@@ -68,10 +71,17 @@ const ModuleItemPage = () => {
     async function fetchNote() {
       try {
         const email = sessionStorage.getItem("email")
-        const res = await fetch(`${process.env.BACKEND_URL}/moduleitems/${moduleItem.module_item_id}/note?email=${email}`)
+        const res = await fetch(`${process.env.BACKEND_URL}/moduleitems/${moduleitem_id}/note?email=${email}`)
         const data = await res.json()
-        if (data.note) setAiNotes(data.note.analysis)
-        else setAiNotes("Could not analyze")
+        if (data.note) {
+          console.log("Fetched note data:", data.note)
+          setAiNotes(data.note.analysis)
+          setSlideNotes(data.note.slide)
+        }
+        else {
+          setAiNotes("Could not analyze")
+          setSlideNotes("Could not analyze")
+        }
       }
       catch (error) {
         console.log("Error getting user's notes")
@@ -82,7 +92,7 @@ const ModuleItemPage = () => {
 
       fetchNote()
 
-    },[is_subscribed])
+    },[])
     
     useEffect(() => {
       async function fetchData() {
@@ -92,7 +102,7 @@ const ModuleItemPage = () => {
       }
       fetchSubscription();
       fetchData()
-  },[])
+  },[is_subscribed])
 
   const router = useRouter();
   return (
@@ -124,7 +134,10 @@ const ModuleItemPage = () => {
       </section>
 
       <hr className="my-8" />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4 cursor-pointer" onClick={() => router.push(`/courses/${course_id}/modules/${module_id}/moduleitems/${moduleitem_id}/flashcards`)}>Go to Flashcards</button>
+      {
+        is_subscribed && <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4 cursor-pointer" onClick={() => router.push(`/courses/${course_id}/modules/${module_id}/moduleitems/${moduleitem_id}/flashcards`)}>Go to Flashcards</button>
+      }
+      {!is_subscribed && <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4 cursor-pointer" onClick={() => router.push(`/pricing`)}>Subscribe to view flashcards</button>}
 
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">AI Analysis</h2>
@@ -138,11 +151,21 @@ const ModuleItemPage = () => {
         </div>
       </section>
 
-      <section>
+      {/* <section>
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Raw Markdown Notes</h2>
         <div className="prose prose-sm max-w-none">
           <Markdown remarkPlugins={[remarkGfm]}>{moduleItem?.module_item_markdown}</Markdown>
-
+        </div>
+      </section> */}
+      <section>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">AI Slide</h2>
+        <div className="prose prose-sm max-w-none">
+          {is_subscribed && <Slides markdownText={slideNotes} /> }
+          {!is_subscribed && (
+            <p className="text-gray-500">
+              You need to subscribe to view the AI slides. Please check our <a href="/pricing" className="text-blue-600">pricing plans</a>.
+            </p>
+          )}
         </div>
       </section>
     </div>
