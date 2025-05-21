@@ -48,7 +48,6 @@ class Database:
             self.modules_col.create_index('course_id')
         except:
             pass
-        self.pricing_col.insert_many(prices)
             
     def add_user(self, user):
         """

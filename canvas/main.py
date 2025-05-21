@@ -21,6 +21,9 @@ from canvas import CanvasFirst, Modules, Submissions, Assignments, Database, Key
 from pydantic import BaseModel
 from typing import Optional
 from dotenv import load_dotenv
+import redis
+import uuid
+r = redis.Redis(host='redis', port=6379)
 load_dotenv()
 db = Database()
 
@@ -181,3 +184,43 @@ def get_flashcards(module_item_id: str, email: str):
     if flashcards:
         return flashcards['flashcards']
     return {"error": "Flashcards not found"}
+
+import json
+import time
+class SearchPostRequest(BaseModel):
+    course_id: Optional[str] = None
+    module_id: Optional[str] = None
+    module_item_id: Optional[str] = None
+    email: str
+    text: str
+    uuid: Optional[str] = None
+    event: Optional[str] = None
+    
+@app.post("/search")
+def search(query: SearchPostRequest):
+    course_id = query.course_id
+    module_id = query.module_id
+    module_item_id = query.module_item_id
+    email = query.email
+    text = query.text
+    if not email or not text or text == "":
+        return {"error": "Please provide an email and text"}
+    
+    query.uuid = str(uuid.uuid4())
+    query.event = "search_embedding"
+    f_query = query.dict(exclude_unset=True)
+    
+    r.xadd("ai.tasks", f_query)
+    while r.get(f_query["uuid"]) is None:
+        # time.sleep(0.08)
+        pass
+    return {"result": json.loads(r.get(f_query["uuid"]))}
+    
+    
+class N8NPostRequest(BaseModel):
+    output: str
+    
+@app.post("/n8n")
+def post_n8n(query: N8NPostRequest):
+    print(query.output)
+    return {"result": query.output}
