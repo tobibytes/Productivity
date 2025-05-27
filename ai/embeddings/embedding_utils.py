@@ -81,6 +81,9 @@ class EmbeddingRedisService:
             
         # Execute the query
         q_filter = self.prepare_filter(course_id=data.get('course_id', None), module_item_id=data.get('module_item_id', None), module_id=data.get('module_id', None), email=data.get('email', None))
+        sys.stdout.write(q_filter)
+        sys.stdout.flush()
+        
         q = self.prepare_knn_query(k=k, _filter=q_filter)
         q_params = {"vec": data['vector'].tobytes()}
         results = self.redis.ft(self.index_name).search(q, q_params)
@@ -116,6 +119,8 @@ class EmbeddingRedisService:
 
         if _filter:
             base_query = f"({_filter})=>[KNN {k} @{vector_field} $vec]"
+            sys.stdout.write(base_query)
+            sys.stdout.flush()
             
 
         q = (

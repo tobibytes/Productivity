@@ -15,7 +15,7 @@ r = Redis(host='localhost', port=6379)
 
 # print(r.hgetall('doc:6346252;notes:0;email:olola73@morgan.edu'))
 # print(r.get("1234567890"))
-print(r.get("1234567890:metadata"))
+# print(r.keys("doc*"))
 
 # def escape_tag(value: str) -> str:
 #     return value.replace('@', r'\@').replace(' ', r'\ ')
