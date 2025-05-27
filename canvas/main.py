@@ -190,7 +190,7 @@ import time
 class SearchPostRequest(BaseModel):
     course_id: Optional[str] = None
     module_id: Optional[str] = None
-    module_item_id: Optional[str] = None
+    module_item_id: Optional[str] = ''
     email: str
     text: str
     uuid: Optional[str] = None
@@ -200,7 +200,6 @@ class SearchPostRequest(BaseModel):
 def search(query: SearchPostRequest):
     course_id = query.course_id
     module_id = query.module_id
-    module_item_id = query.module_item_id
     email = query.email
     text = query.text
     if not email or not text or text == "":
