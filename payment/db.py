@@ -70,6 +70,7 @@ class Database:
             return [self.format_for_db(pricing) for pricing in pricing]
         else:
             return None
+        
     def subscribe_user(self, email, pricing_id):
         """
         Subscribe a user to a pricing.
