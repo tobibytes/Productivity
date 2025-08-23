@@ -1,11 +1,10 @@
 "use client";
 
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const CoursePage = () => {
   const { course_id } = useParams();
-  const searchParams = useSearchParams();
 
   const [course, setCourse] = useState<any | null>(null);
 

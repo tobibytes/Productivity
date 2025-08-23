@@ -1,6 +1,5 @@
 
 from shared.db_client import get_db
-import bson
 class Database:
     def __init__(self):
         """

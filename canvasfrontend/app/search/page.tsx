@@ -32,7 +32,6 @@ const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [course, setCourse] = useState("");
   const [module, setModule] = useState("");
-  const [item, setItem] = useState("");
   const [results, setResults] = useState(dummyResults); // Replace with real results from backend
 
 

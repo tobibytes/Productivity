@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ModuleItemCard from "@/components/ModuleItemCard";
 import ModuleCard from "@/components/ModuleCard";
 

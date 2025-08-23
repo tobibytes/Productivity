@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Markdown from "react-markdown";
-import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 const Slides = dynamic(() => import("@/components/Slides"), { ssr: false });
 
@@ -71,7 +70,6 @@ const ModuleItemPage = () => {
 
     async function fetchNote() {
       try {
-        const email = sessionStorage.getItem("email")
         const data = await (await import("@/lib/api")).get(`/moduleitems/${moduleitem_id}/note`)
         if (data.note) {
           console.log("Fetched note data:", data.note)
