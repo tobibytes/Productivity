@@ -38,7 +38,8 @@ const SearchPage = () => {
   async function getCourses(email: string) {
     try {
     
-      const response = await fetch(`${process.env.BACKEND_URL}/courses?email=${email}`);
+      const backend = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+      const response = await fetch(`${backend}/courses?email=${email}`);
       if (!response.ok) {
         throw new Error("Failed to fetch courses");
       }
@@ -51,7 +52,8 @@ const SearchPage = () => {
   }
   async function getModules(id: string, email: string) {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/courses/${id}/modules?email=${email}`);
+      const backend = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+      const response = await fetch(`${backend}/courses/${id}/modules?email=${email}`);
       if (!response.ok) {
         throw new Error("Failed to fetch modules");
       }
@@ -65,13 +67,17 @@ const SearchPage = () => {
 
   async function searchNote(searchData: SearchData) {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/search`, {
+      const backend = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+      const response = await fetch(`${backend}/search`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(searchData)
       })
+      const data = await response.json();
+      if (data && data.result) setResults(data.result);
+      return data.result;
     }
     catch (error) {
       console.error("Error searching notes:", error);

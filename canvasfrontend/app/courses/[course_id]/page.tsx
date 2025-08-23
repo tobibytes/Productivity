@@ -13,20 +13,23 @@ const CoursePage = () => {
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    const emailFromStorage = sessionStorage.getItem("email");
-    if (emailFromStorage) {
-      setEmail(emailFromStorage);
-    } else {
-      console.error("Email not found in session storage");
+    // Email is derived from cookie; optional to fetch from /auth/me
+    async function getEmail() {
+      try {
+        try {
+          const data = await (await import("@/lib/api")).get("/auth/me");
+          setEmail(data.email);
+        } catch {}
+      } catch {}
     }
+    getEmail();
   }, []);
 
 
   useEffect(() => {
     async function fetchCourse() {
       try {
-        const res = await fetch(`${process.env.BACKEND_URL}/courses/${course_id}?email=${email}`);
-        const data = await res.json();
+        const data = await (await import("@/lib/api")).get(`/courses/${course_id}`);
         console.log("Course data:", data);
         setCourse(data.course);
       } catch (error) {

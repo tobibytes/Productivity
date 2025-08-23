@@ -78,13 +78,10 @@ def get_pricings():
     
     pricings = db.get_pricings()
     email = request.args.get('email', None)
-    if email or email != "null":
+    if email and email != "null":
         pricing_id = db.get_user_pricing(email=email)
         for idx, pricing in enumerate(pricings):
-            if pricings[idx]['id'] == pricing_id:
-                pricings[idx]['is_active'] = True
-            else:
-                pricings[idx]['is_active'] = False
+            pricings[idx]['is_active'] = (pricings[idx].get('id') == pricing_id)
     return {"pricings": pricings}
 
 class POSTSUBSCRIBETOPRICING(BaseModel):
@@ -104,8 +101,8 @@ def suscribe_to_pricing():
         return {"error": "Could not verify user"}
     if user["pricing_id"] == pricing_id:
       return {"error": "Already subscribed to this plan"}
-    result = db.subsribe_user(email=email, pricing_id=pricing_id)
-    r.xadd("ai.task", {
+    result = db.subscribe_user(email=email, pricing_id=pricing_id)
+    r.xadd("ai.tasks", {
       "event": "start_full_analysis",
       "email": email
     })

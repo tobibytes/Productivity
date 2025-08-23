@@ -26,7 +26,8 @@ export default function AssignmentsPage() {
     async function fetchAssignments() {
       try {
         console.log("Fetching assignments for course ID:", course_id);
-        const res = await fetch(`${process.env.BACKEND_URL}/courses/${course_id}/assignments`);
+        const backend = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+        const res = await fetch(`${backend}/courses/${course_id}/assignments`);
         const data = await res.json();
         setAssignments(data.assignments || []);
       } catch (error) {

@@ -25,8 +25,9 @@ export default function AssignmentPage() {
   useEffect(() => {
     async function fetchAssignment() {
       try {
+        const backend = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
         const res = await fetch(
-          `${process.env.BACKEND_URL}/courses/${course_id}/assignments/${assignment_id}`
+          `${backend}/courses/${course_id}/assignments/${assignment_id}`
         );
         const data = await res.json();
         setAssignment(data.assignment);

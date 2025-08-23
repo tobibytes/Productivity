@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-md = MarkItDown(llm_client=client, llm_model="gpt-4o")
+md = MarkItDown(llm_client=client, llm_model=os.getenv("MARKITDOWN_MODEL", "gpt-4o"))
 
 def convert_to_markdown(url):
     try:

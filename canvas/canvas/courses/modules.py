@@ -53,19 +53,19 @@ class Modules:
         """
         Parse the module item.
         """
-        if 'id' not in module_item:
+        if not module_item or 'id' not in module_item:
             raise ValueError("Module item does not have an ID.")
         return {
             "module_item_module_id": str(module_parent_id),
-            "module_item_id": str(module_item['id']),
-            "module_item_title": module_item['display_name'],
-            "module_item_filename": module_item['filename'],
-            "module_item_uuid": module_item['uuid'],
-            "module_item_type": module_item['mime_class'],
-            "module_item_content_type": module_item['content-type'],
-            "module_item_download_url": module_item['url'],
-            "module_item_size": module_item['size'],
-            "module_item_created_at": module_item['created_at'],
+            "module_item_id": str(module_item.get('id')),
+            "module_item_title": module_item.get('display_name', ''),
+            "module_item_filename": module_item.get('filename', ''),
+            "module_item_uuid": module_item.get('uuid', ''),
+            "module_item_type": module_item.get('mime_class', ''),
+            "module_item_content_type": module_item.get('content-type', ''),
+            "module_item_download_url": module_item.get('url', ''),
+            "module_item_size": module_item.get('size', 0),
+            "module_item_created_at": module_item.get('created_at', ''),
         }
         
     def _parse_module(self, module):

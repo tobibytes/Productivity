@@ -24,7 +24,8 @@ class ControllerRedisStream:
         if '_id' in data:
             data.pop('_id')
         self.redis.xadd("ai.tasks", data)
-        self.redis.xack('ai.tasks', "analysis", message_id)
+        # acknowledge on the correct consumer group
+        self.redis.xack('ai.tasks', "controller", message_id)
         
             
     def listen(self):

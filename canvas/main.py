@@ -23,9 +23,22 @@ from typing import Optional
 from dotenv import load_dotenv
 import redis
 import uuid
+import os
+import time
+import jwt
+from fastapi import FastAPI, Request, Response, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
 r = redis.Redis(host='redis', port=6379)
 load_dotenv()
 db = Database()
+
+JWT_SECRET = os.getenv("JWT_SECRET", "dev-insecure-secret-change-me")
+JWT_ALG = "HS256"
+SESSION_COOKIE_NAME = "session"
+SESSION_COOKIE_SECURE = os.getenv("COOKIE_SECURE", "false").lower() == "true"
+SESSION_COOKIE_SAMESITE = os.getenv("COOKIE_SAMESITE", "lax").lower()
+SESSION_COOKIE_DOMAIN = os.getenv("COOKIE_DOMAIN", None)
 
 class RequestHandler(BaseModel):
     email: Optional[str] = None
@@ -36,37 +49,100 @@ class SuscribeToPricing(BaseModel):
     pricing_id: Optional[str] = None
 
 import threading
-from fastapi import FastAPI
-
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[FRONTEND_ORIGIN],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# --- Simple Redis-based rate limiting ---
+from functools import wraps
+
+def rate_limit(key_prefix: str, limit: int, window_sec: int):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                request: Request = kwargs.get("request") or next((a for a in args if isinstance(a, Request)), None)
+                ip = request.client.host if request else "unknown"
+                key = f"ratelimit:{key_prefix}:{ip}"
+                current = r.incr(key)
+                if current == 1:
+                    r.expire(key, window_sec)
+                if current > limit:
+                    raise HTTPException(status_code=429, detail="Too Many Requests")
+            except Exception:
+                # Fail open if redis is not available
+                pass
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+# --- Auth helpers ---
+
+def create_jwt(email: str) -> str:
+    return jwt.encode({"email": email, "iat": int(time.time())}, JWT_SECRET, algorithm=JWT_ALG)
+
+def get_email_from_request(request: Request) -> Optional[str]:
+    token = request.cookies.get(SESSION_COOKIE_NAME)
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALG])
+        return payload.get("email")
+    except Exception:
+        return None
+
+# --- Auth endpoints ---
+class MeResponse(BaseModel):
+    email: str
+
+@app.get("/auth/me")
+def auth_me(request: Request):
+    email = get_email_from_request(request)
+    if not email:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return {"email": email}
+
+@app.post("/auth/logout")
+def auth_logout(response: Response):
+    response.delete_cookie(key=SESSION_COOKIE_NAME)
+    return {"success": True}
+
 @app.post("/signin")
-def login(value: RequestHandler):
+@rate_limit("signin", limit=10, window_sec=60)
+def login(value: RequestHandler, response: Response):
     email = value.email
     api_key = value.api_key
-    print(value)
     user = db.get_user(email=email)
-    print(user)
     if not user:
         return {"error": "Could not login user"}
     if KeyEncryptor.decrypt(user['api_key']) != api_key:
         return {"error": "Could not login user"}
-    return {"email": email, "api_key": user['api_key'], "success": True}
+    # Set signed session cookie
+    token = create_jwt(email)
+    response.set_cookie(
+        key=SESSION_COOKIE_NAME,
+        value=token,
+        httponly=True,
+        secure=SESSION_COOKIE_SECURE,
+        samesite=SESSION_COOKIE_SAMESITE,
+        domain=SESSION_COOKIE_DOMAIN,
+        path="/",
+    )
+    return {"email": email, "success": True}
 
 @app.post("/register")
+@rate_limit("register", limit=5, window_sec=300)
 def register(value: RequestHandler):
     email = value.email
     api_key = value.api_key
@@ -115,12 +191,16 @@ def get_user(email: str):
     user_info = db.get_user(email=email)
     if not user_info:
         return {"error": "Could not login user"}
-    user_info['api_key'] = KeyEncryptor.decrypt(user_info['api_key'])
+    # Never expose decrypted API keys
+    if 'api_key' in user_info:
+        user_info.pop('api_key')
     return {"user": user_info}
 
 
 @app.get("/courses")
-def get_courses(email: str):
+def get_courses(email: Optional[str] = None, request: Request = None):
+    if not email and request is not None:
+        email = get_email_from_request(request)
     user_info = db.get_user(email=email)
     if not user_info:
         return {"error": "Could not login user"}
@@ -130,7 +210,9 @@ def get_courses(email: str):
     return {"courses": user_courses}
 
 @app.get("/courses/{course_id}")
-def get_course(course_id: str, email: str):
+def get_course(course_id: str, email: Optional[str] = None, request: Request = None):
+    if not email and request is not None:
+        email = get_email_from_request(request)
     user_info = db.get_user(email=email)
     if not user_info:
         return {"error": "Could not login user"}
@@ -172,17 +254,21 @@ def get_assignment(assignment_id: str, course_id: str):
     return {"assignment": assignment}
 
 @app.get("/moduleitems/{module_item_id}/note")
-def get_note(module_item_id: str, email: str):
+def get_note(module_item_id: str, email: Optional[str] = None, request: Request = None):
+    if not email and request is not None:
+        email = get_email_from_request(request)
     note = db.get_note(module_item_id, email)
     if note:
         return { "note": note["note"]}
     return {"error": "Note not found"}
 
 @app.get("/moduleitems/{module_item_id}/flashcards")
-def get_flashcards(module_item_id: str, email: str):
+def get_flashcards(module_item_id: str, email: Optional[str] = None, request: Request = None):
+    if not email and request is not None:
+        email = get_email_from_request(request)
     flashcards = db.get_flashcards(module_item_id, email)
-    if flashcards:
-        return flashcards['flashcards']
+    if flashcards and 'flashcards' in flashcards:
+        return {"flashcards": flashcards['flashcards']}
     return {"error": "Flashcards not found"}
 
 import json
@@ -197,6 +283,7 @@ class SearchPostRequest(BaseModel):
     event: Optional[str] = None
     
 @app.post("/search")
+@rate_limit("search", limit=60, window_sec=60)
 def search(query: SearchPostRequest):
     course_id = query.course_id
     module_id = query.module_id
@@ -210,10 +297,15 @@ def search(query: SearchPostRequest):
     f_query = query.dict(exclude_unset=True)
     
     r.xadd("ai.tasks", f_query)
-    while r.get(f_query["uuid"]) is None:
-        # time.sleep(0.08)
-        pass
-    return {"result": json.loads(r.get(f_query["uuid"]))}
+    # avoid CPU spin; wait with timeout and small sleep
+    waited = 0
+    step = 0.05
+    timeout = 10
+    while r.get(f_query["uuid"]) is None and waited < timeout:
+        time.sleep(step)
+        waited += step
+    result = r.get(f_query["uuid"]) if r.get(f_query["uuid"]) else "[]"
+    return {"result": json.loads(result)}
     
     
 class N8NPostRequest(BaseModel):

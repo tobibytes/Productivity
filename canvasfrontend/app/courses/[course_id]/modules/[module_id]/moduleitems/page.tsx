@@ -27,7 +27,8 @@ export default function ModuleItemsPage() {
   useEffect(() => {
     async function fetchItems() {
       try {
-        const res = await fetch(`${process.env.BACKEND_URL}/modules/${module_id}/moduleitems`);
+        const backend = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+        const res = await fetch(`${backend}/modules/${module_id}/moduleitems`);
         const data = await res.json();
         setModuleItems(data.module_items);
       } catch (error) {

@@ -19,10 +19,8 @@ const CoursesPage = () => {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const email = sessionStorage.getItem("email");
-        const res = await fetch(`${process.env.BACKEND_URL}/courses?email=${email}`);
-        const data = await res.json();
-        setCourses(data.courses || []);
+        const { courses } = await (await import("@/lib/api")).get("/courses");
+        setCourses(courses || []);
       } catch (error) {
         console.error("Failed to fetch courses", error);
       }

@@ -1,8 +1,6 @@
 
-from pymongo.mongo_client import MongoClient
-import os
+from shared.db_client import get_db
 import bson
-uri = os.getenv("MONGODB_URI")
 
 prices = [
     {"active":True,"pricing_table_id":"prctbl_1RNm71LpjISvJMPEWIHks5Wn","billing_scheme":"per_unit","created":{"$numberInt":"1747017522"},"currency":"usd","custom_unit_amount":None,"id":"price_1RNmGMLpjISvJMPEvgNfdEDl","livemode":True,"lookup_key":None,"metadata":{},"nickname":None,"object":"price","product":"prod_SIN0ctCHe3D4oN","recurring":{"interval":"month","interval_count":{"$numberInt":"3"},"meter":None,"trial_period_days":None,"usage_type":"licensed"},"tax_behavior":"unspecified","tiers_mode":None,"transform_quantity":None,"type":"recurring","unit_amount":{"$numberInt":"15000"},"unit_amount_decimal":"15000"},
@@ -15,9 +13,7 @@ class Database:
         """
         Initialize the database connection.
         """
-        self.uri = uri
-        self.client = MongoClient(uri)
-        self.db = self.client.db
+        self.db = get_db()
         try:
             self.user_col = self.db.create_collection('user')
             self.modules_col = self.db.create_collection('modules')
@@ -42,7 +38,7 @@ class Database:
             self.user_col.create_index('status')   
         except:
             pass
-        self.pricing_col.insert_many(prices)
+        # self.pricing_col.insert_many(prices)
         
     def get_user(self, email):
         """

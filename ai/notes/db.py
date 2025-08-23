@@ -1,19 +1,12 @@
 
-from pymongo.mongo_client import MongoClient
-import os
+from shared.db_client import get_db
 import bson
-from dotenv import load_dotenv
-load_dotenv()
-#         """
-uri = os.getenv("MONGODB_URI")
 class Database:
     def __init__(self):
         """
         Initialize the database connection.
         """
-        self.uri = uri
-        self.client = MongoClient(uri)
-        self.db = self.client.db
+        self.db = get_db()
         try:
             self.notes_col = self.db.create_collection('notes')
             self.pricing_col = self.db.create_collection('pricing')
@@ -104,8 +97,12 @@ class Database:
     def add_note(self, data):
         self.notes_col.insert_one(data)
     
-    def get_note(self, moduleitem_id):
-        return self.format_for_db(self.notes_col.find_one({'module_item_id': module_item_id}))
+    def get_note(self, module_item_id, email=None):
+        q = {'module_item_id': module_item_id}
+        if email:
+            q['email'] = email
+        data = self.notes_col.find_one(q)
+        return self.format_for_db(data) if data else None
         
         
     def add_flashcard(self, data):
