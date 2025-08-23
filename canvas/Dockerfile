@@ -14,11 +14,13 @@ RUN apt-get update && apt-get install -y \
 
 # Optional: Ensure soffice is in PATH
 ENV PATH="/usr/lib/libreoffice/program:${PATH}"
-COPY requirements.txt .
 
+COPY canvas/requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
 
-COPY . .
+# Copy service code and shared module
+COPY canvas ./
+COPY shared ./shared
 
 EXPOSE 8000
 

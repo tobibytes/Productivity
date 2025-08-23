@@ -49,7 +49,8 @@ class FlashCardRedisStreams:
                             module_id = message_data['module_id']
                             module_item_id = message_data['module_item_id']
                             email = message_data['email']
-                            text = db.get_note(module_item_id)['note']['analysis']
+                            note = db.get_note(module_item_id)
+                            text = note['note']['analysis'] if note and 'note' in note else ''
                             data = {
                                 "course_id": course_id,
                                 "module_id": module_id,

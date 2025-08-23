@@ -24,14 +24,13 @@ class EmbeddingRedisService:
         
         
     def create_index(self, vector_dimensions: int):
+        # Try to read index info; if exists, return without dropping
         try:
-            # Check if index exists
             info = self.redis.ft(self.index_name).info()
-            print("Indexed fields:", info["attributes"])
-            print("ℹ️ Index already exists, dropping and recreating...")
-            self.redis.ft(self.index_name).dropindex(delete_documents=False)
+            print("ℹ️ Index already exists.")
+            return
         except Exception as e:
-            print("ℹ️ Index does not exist or already dropped:", e)
+            print("ℹ️ Creating new index (not found):", e)
 
         # Define schema
         schema = (
@@ -81,8 +80,9 @@ class EmbeddingRedisService:
             
         # Execute the query
         q_filter = self.prepare_filter(course_id=data.get('course_id', None), module_item_id=data.get('module_item_id', None), module_id=data.get('module_id', None), email=data.get('email', None))
-        sys.stdout.write(q_filter)
-        sys.stdout.flush()
+        if q_filter:
+            sys.stdout.write(q_filter)
+            sys.stdout.flush()
         
         q = self.prepare_knn_query(k=k, _filter=q_filter)
         q_params = {"vec": data['vector'].tobytes()}

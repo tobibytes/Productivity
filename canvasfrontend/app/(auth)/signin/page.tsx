@@ -13,7 +13,8 @@ const router = useRouter()
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log(process.env.BACKEND_URL)
-    const res = await fetch(`${process.env.BACKEND_URL}/signin`, {
+    const backend = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+    const res = await fetch(`${backend}/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

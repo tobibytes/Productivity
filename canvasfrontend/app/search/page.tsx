@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import SearchResultCard from "@/components/SearchResultCard"; // adjust path as needed
+import { get, post } from "@/lib/api";
 
 const dummyResults = [
   {
@@ -31,32 +32,20 @@ const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [course, setCourse] = useState("");
   const [module, setModule] = useState("");
-  const [item, setItem] = useState("");
   const [results, setResults] = useState(dummyResults); // Replace with real results from backend
 
 
-  async function getCourses(email: string) {
+  async function getCourses() {
     try {
-    
-      const response = await fetch(`${process.env.BACKEND_URL}/courses?email=${email}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch courses");
-      }
-      const data = await response.json();
-      return data;
+      return await get("/courses");
     } catch (error) {
       console.error("Error fetching courses:", error);
       return [];
     }
   }
-  async function getModules(id: string, email: string) {
+  async function getModules(id: string) {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/courses/${id}/modules?email=${email}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch modules");
-      }
-      const data = await response.json();
-      return data;
+      return await get(`/courses/${id}/modules`);
     } catch (error) {
       console.error("Error fetching modules:", error);
       return [];
@@ -65,13 +54,9 @@ const SearchPage = () => {
 
   async function searchNote(searchData: SearchData) {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/search`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(searchData)
-      })
+      const data = await post(`/search`, searchData);
+      if (data && data.result) setResults(data.result);
+      return data.result;
     }
     catch (error) {
       console.error("Error searching notes:", error);

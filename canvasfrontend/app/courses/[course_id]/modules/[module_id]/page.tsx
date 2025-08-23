@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ModuleItemCard from "@/components/ModuleItemCard";
 import ModuleCard from "@/components/ModuleCard";
 
@@ -37,8 +37,7 @@ export default function ModulePage() {
   useEffect(() => {
     async function fetchModule() {
       try {
-        const res = await fetch(`${process.env.BACKEND_URL}/courses/${course_id}/modules/${module_id}`);
-        const data = await res.json();
+        const data = await (await import("@/lib/api")).get(`/courses/${course_id}/modules/${module_id}`);
         setModule(data.module);
       } catch (error) {
         console.error("Error fetching module data:", error);
@@ -47,8 +46,7 @@ export default function ModulePage() {
     
     async function fetchModuleItems() {
       try {
-        const res = await fetch(`${process.env.BACKEND_URL}/modules/${module_id}/moduleitems`);
-        const data = await res.json();
+        const data = await (await import("@/lib/api")).get(`/modules/${module_id}/moduleitems`);
         setModuleItems(data.module_items);
       } catch (error) {
         console.error("Error fetching module items:", error);

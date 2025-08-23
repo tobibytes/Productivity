@@ -15,7 +15,8 @@ const Register = () => {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const res = await fetch(`${process.env.BACKEND_URL}/register`, {
+    const backend = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+    const res = await fetch(`${backend}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

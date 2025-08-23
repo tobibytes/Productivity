@@ -1,20 +1,12 @@
 
-from pymongo.mongo_client import MongoClient
-import os
+from shared.db_client import get_db
 import bson
-from dotenv import load_dotenv
-load_dotenv()
-#         """
-
-uri = os.getenv("MONGODB_URI")
 class Database:
     def __init__(self):
         """
         Initialize the database connection.
         """
-        self.uri = uri
-        self.client = MongoClient(uri)
-        self.db = self.client.db
+        self.db = get_db()
         try:
             self.user_col = self.db.create_collection('user')
             self.modules_col = self.db.create_collection('modules')
