@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main, feat/** ]
+
+jobs:
+  frontend:
+    name: Frontend Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: canvasfrontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: canvasfrontend/package-lock.json
+      - name: Install deps
+        run: npm ci
+      - name: Lint
+        run: npm run lint --if-present
+
+  python-services:
+    name: Python Lint (ruff) and syntax check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - canvas
+          - controller
+          - payment
+          - ai/notes
+          - ai/embeddings
+          - ai/flashcards
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install requirements
+        working-directory: ${{ matrix.service }}
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install ruff
+      - name: Ruff lint
+        working-directory: ${{ matrix.service }}
+        run: ruff check .
+      - name: Syntax check
+        working-directory: ${{ matrix.service }}
+        run: python -m compileall .
