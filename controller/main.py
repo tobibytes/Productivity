@@ -1,4 +1,6 @@
 from controller import ControllerRedisStream
 
 crs = ControllerRedisStream()
-crs.listen()
+
+if __name__ == "__main__":
+    crs.listen()

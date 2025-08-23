@@ -9,6 +9,8 @@ class ControllerRedisStream:
     def __init__(self, host="redis", port=6379):
         self.redis = redis.Redis(host=host, port=port, decode_responses=True)
         self.stream_name = "controller"
+        # Health endpoint support
+        self.app = None
         # Create consumer group (run once)
         try:
             self.redis.xgroup_create(name="ai.tasks", groupname="controller", id="0", mkstream=True)

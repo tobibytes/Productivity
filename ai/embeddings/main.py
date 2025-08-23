@@ -2,5 +2,5 @@ from embedding_utils import EmbeddingRedisStreams
 
 e = EmbeddingRedisStreams()
 
-
-e.listen()
+if __name__ == "__main__":
+    e.listen()

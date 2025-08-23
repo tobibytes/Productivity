@@ -87,6 +87,15 @@ def rate_limit(key_prefix: str, limit: int, window_sec: int):
 def read_root():
     return {"Hello": "World"}
 
+@app.get("/health")
+def health():
+    try:
+        # basic redis ping and return
+        r.ping()
+        return {"status": "ok"}
+    except Exception:
+        return {"status": "degraded"}
+
 # --- Auth helpers ---
 
 def create_jwt(email: str) -> str:

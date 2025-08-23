@@ -22,6 +22,14 @@ CORS(app)
 @app.route('/index')
 def read_root():
     return {"Hello": "World"}
+
+@app.route('/health')
+def health():
+  try:
+    r.ping()
+    return {"status": "ok"}
+  except Exception:
+    return {"status": "degraded"}
   
   
 @app.route('/webhook', methods=['POST'])

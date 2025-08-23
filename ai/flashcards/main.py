@@ -3,4 +3,5 @@ from flashcard_utils import FlashCardRedisStreams
 
 fcrs = FlashCardRedisStreams()
 
-fcrs.listen()
+if __name__ == "__main__":
+    fcrs.listen()
