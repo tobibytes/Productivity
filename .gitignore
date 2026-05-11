@@ -11,3 +11,6 @@ venv
 docker-compose.yml
 *compose*
 .vscode
+# secrets — never commit raw encryption keys
+canvas/key.txt
+**/key.txt
